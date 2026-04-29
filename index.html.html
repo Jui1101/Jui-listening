@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>청각 재활 훈련</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --cream:#f6f8f4;
+  --beige:#eef3ec;
+  --beige2:#dfe8dc;
+  --sand:#cbd8c7;
+  --tan:#8ea083;
+  --brown:#506247;
+  --dark:#1f2a1d;
+  --green:#0f7b3a;
+  --green2:#eaf5ed;
+  --green3:#075c2a;
+  --red:#e85d55;
+  --red2:#fff0ef;
+  --red3:#a52a24;
+  --blue:#3a8fb7;
+  --blue2:#eef8fb;
+  --blue3:#1f6281;
+  --amber:#d59628;
+  --amber2:#fff7e6;
+  --amber3:#805100;
+  --teal:#176b44;
+  --teal2:#edf7f0;
+  --teal3:#0b4e2c;
+  --card:rgba(255,255,255,.9);
+  --line:#e3e9df;
+  --sub:#72806d;
+  --mut:#a3aea0;
+  --shadow:0 14px 36px rgba(25,45,28,.08);
+  --shadow-sm:0 6px 18px rgba(25,45,28,.06);
+  --rad:24px;--rads:16px;--radxs:10px;--pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Pretendard','Nanum Gothic',sans-serif;background:linear-gradient(180deg,#fbfcff 0%,#f4f7fb 45%,#eef3f9 100%);color:var(--dark);font-size:15px;min-height:100vh}
+
+/* ── Header ── */
+.hdr{background:rgba(255,255,255,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(231,235,242,.75);padding:16px 18px 0;position:sticky;top:0;z-index:99;box-shadow:0 6px 24px rgba(31,39,54,.05)}
+.hdr-top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.logo{font-size:18px;font-weight:900;color:var(--dark);letter-spacing:-.4px;display:flex;align-items:center;gap:9px}
+.logo-mark{width:32px;height:32px;border-radius:12px;background:linear-gradient(135deg,#e9f7ee,#d6efe0);color:#0f6b3d;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(19,99,58,.12)}
+.logo em{color:var(--teal);font-style:normal}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{flex:none;padding:10px 17px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:700;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.tb.on{color:var(--teal3);border-bottom-color:var(--teal)}
+
+/* ── Layout ── */
+.page{padding:14px;max-width:540px;margin:0 auto}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.72);border-radius:var(--rad);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-sm{padding:13px}
+.lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);margin-bottom:9px}
+
+/* ── Ear grid ── */
+.ear-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:13px}
+.ear-btn{border:1.5px solid var(--line);border-radius:var(--rads);background:var(--card);padding:12px 4px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;text-align:center;color:var(--sub);transition:all .15s}
+.ear-btn .ico{font-size:20px;display:block;margin-bottom:3px}
+.ear-btn.on-r{border-color:var(--blue);background:var(--blue2);color:var(--blue3)}
+.ear-btn.on-l{border-color:var(--teal);background:var(--teal2);color:var(--teal3)}
+.ear-btn.on-b{border-color:var(--green);background:var(--green2);color:var(--green3)}
+
+/* ── Stage pills ── */
+.stage-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.s-pill{padding:6px 12px;border:1.5px solid var(--line);border-radius:var(--pill);background:var(--card);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;white-space:nowrap;line-height:1.4}
+.s-pill.on{border-color:var(--teal);background:var(--teal2);color:var(--teal3)}
+.s-hint{font-size:12px;font-weight:700;color:var(--teal3);background:var(--teal2);border-radius:var(--radxs);padding:8px 12px;line-height:1.6;margin-top:8px}
+
+/* ── Progress ── */
+.s-prog{display:flex;align-items:center;gap:7px;margin-top:10px}
+.pdots{display:flex;gap:4px}
+.pdot{width:9px;height:9px;border-radius:50%;background:var(--line);transition:background .3s}
+.pdot.on{background:var(--teal)}
+.ptxt{font-size:12px;font-weight:700;color:var(--sub)}
+.adv-banner{display:none;margin-top:9px;background:var(--green2);border:1px solid var(--green);border-radius:var(--rads);padding:10px 13px;font-size:13px;font-weight:700;color:var(--green3);animation:popIn .3s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+/* ── Weakness ── */
+.weak-panel{background:var(--amber2);border:1px solid var(--amber);border-radius:var(--rads);padding:12px 13px;margin-top:9px;display:none}
+.weak-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--amber3);margin-bottom:8px}
+.weak-item{margin-bottom:8px}
+.weak-lbl{font-size:12px;font-weight:700;color:var(--amber3);margin-bottom:3px}
+.weak-bar-bg{height:5px;background:rgba(184,151,90,.2);border-radius:999px;overflow:hidden}
+.weak-bar{height:100%;background:var(--amber);border-radius:999px;transition:width .5s}
+
+/* ── Mode switcher (VS / 자유) ── */
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:13px;background:rgba(226,232,242,.72);border-radius:var(--rads);padding:4px;box-shadow:inset 0 1px 2px rgba(31,39,54,.04)}
+.mode-btn{padding:9px;border:none;border-radius:var(--rads);background:transparent;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .15s;text-align:center}
+.mode-btn.on{background:#fff;color:var(--teal3);box-shadow:0 4px 14px rgba(31,39,54,.08)}
+
+/* ── Word box ── */
+.word-box{
+  background:linear-gradient(145deg,#ffffff 0%,#f4f7ff 100%);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:var(--shadow);
+  border-radius:var(--rad);
+  padding:30px 20px;
+  text-align:center;
+  margin-bottom:12px;
+  min-height:150px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  cursor:pointer;
+  position:relative;
+}
+.word-box-hint{font-size:11px;font-weight:700;color:var(--sub)}
+.w-main{font-size:52px;font-weight:900;letter-spacing:4px;color:transparent;text-shadow:0 0 18px rgba(32,36,43,.26);filter:blur(12px);transition:none;user-select:none}
+.w-main.show{filter:none;color:var(--dark);text-shadow:none;transition:none}
+.w-tap{font-size:12px;font-weight:700;color:var(--sub)}
+.w-tap.hide{display:none}
+
+/* ── VS chips ── */
+.vs-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
+.vs-chip{padding:12px 26px;background:#fff;border:1.5px solid var(--sand);border-radius:var(--pill);font-size:20px;font-weight:900;color:var(--dark);cursor:pointer;transition:all .16s;box-shadow:var(--shadow-sm)}
+.vs-chip:hover{border-color:var(--teal);background:var(--teal2)}
+.vs-chip.ok{background:var(--green2);border-color:var(--green);color:var(--green3)}
+.vs-chip.ng{background:var(--red2);border-color:var(--red);color:var(--red3)}
+.vs-chip.ans{background:var(--beige);border-color:var(--sand);color:var(--sub)}
+.vs-sep{font-size:13px;font-weight:700;color:var(--mut)}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.btn{flex:1;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:var(--rads);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:all .12s;text-align:center;background:#fff;color:var(--dark);box-shadow:0 4px 12px rgba(31,39,54,.04)}
+.btn:active{opacity:.75;transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#0f7b3a,#2fa866);color:#fff;border-color:transparent}
+.btn-start{background:linear-gradient(135deg,#064e2a,#0f7b3a);color:#fff;border-color:#064e2a}
+.btn-next{background:linear-gradient(135deg,#eaf3ff,#d8eaff);color:#175a9c;border-color:#b9d7fb}
+.btn-next:hover{background:#dcecff}
+.btn-ok{background:var(--green2);color:var(--green3);border-color:var(--green)}
+.btn-save{background:linear-gradient(135deg,#fff4d7,#ffe4a8);color:#7a4c00;border-color:#f0bf50}
+.btn-ng{background:var(--red2);color:var(--red3);border-color:var(--red)}
+.btn-ghost{color:var(--sub);border-color:var(--line);background:var(--card)}
+.btn-blue{background:var(--blue);color:#fff;border-color:var(--blue3)}
+.btn-danger{background:var(--red2);color:var(--red3);border-color:var(--red)}
+.btn-sm{padding:8px 12px;font-size:12px;flex:none}
+.btn-icon{flex:none;width:44px;padding:12px 0;font-size:17px;text-align:center}
+
+/* ── App-like motion & feedback ── */
+.card,.word-box,.s-pill,.ear-btn,.mode-btn,.btn,.vs-chip{will-change:transform;transition:transform .16s cubic-bezier(.2,.8,.2,1),box-shadow .18s,background .18s,border-color .18s}
+.card{animation:cardIn .26s ease both}.panel.on{animation:panelIn .22s ease both}
+.word-box.playing{animation:listenPulse .55s ease both;box-shadow:0 14px 34px rgba(23,90,156,.13)}
+.vs-chip.ok{animation:popGood .32s cubic-bezier(.2,1.4,.3,1)}
+.vs-chip.ng{animation:shakeBad .34s ease both}
+.btn-save.saved{animation:saveFlash .55s ease both}
+ panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+ cardIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+ listenPulse{0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}}
+ popGood{0%{transform:scale(.96)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+ shakeBad{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(5px)}75%{transform:translateX(-2px)}}
+ saveFlash{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+ (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ── Score ── */
+.score-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.sc-cell{border-radius:var(--rads);padding:12px;text-align:center}
+.sc-cell.ok{background:var(--green2);border:1px solid #b8d8ba}
+.sc-cell.ng{background:var(--red2);border:1px solid #e0b0a8}
+.sc-n{font-size:26px;font-weight:800}
+.sc-cell.ok .sc-n{color:var(--green3)}.sc-cell.ng .sc-n{color:var(--red3)}
+.sc-l{font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.pbar{height:6px;background:var(--beige2);border-radius:999px;overflow:hidden;margin:6px 0}
+.pfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:999px;transition:width .4s}
+.prow{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--sub)}
+
+/* ── Type area ── */
+.type-area{background:var(--beige);border-radius:var(--rads);padding:12px 14px;margin-bottom:11px}
+.type-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--sub);margin-bottom:7px}
+.type-row{display:flex;gap:7px}
+.type-inp{flex:1;padding:10px 12px;border:1.5px solid var(--sand);border-radius:var(--rads);font-family:inherit;font-size:15px;font-weight:700;outline:none;background:var(--card);color:var(--dark)}
+.type-inp:focus{border-color:var(--teal)}
+.type-res{font-size:13px;font-weight:700;margin-top:7px;min-height:20px;color:var(--sub);line-height:1.4}
+.type-res.ok{color:var(--green3)}.type-res.ng{color:var(--red3)}
+
+/* ── Speech ── */
+.sp-box{background:var(--teal2);border:1.5px solid var(--teal);border-radius:var(--rads);padding:14px;margin-bottom:11px}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--teal3);text-align:center;margin-bottom:10px}
+.mic-wrap{display:flex;flex-direction:column;align-items:center;gap:7px}
+.mic-btn{width:60px;height:60px;border-radius:50%;border:2px solid var(--teal);background:var(--card);font-size:24px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(106,172,170,.2)}
+.mic-btn.rec{background:var(--red);border-color:var(--red3);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.sp-res{font-size:13px;font-weight:700;text-align:center;min-height:20px;color:var(--sub)}
+.sp-res.ok{color:var(--green3)}.sp-res.ng{color:var(--red3)}
+.sp-note{font-size:11px;color:var(--mut);text-align:center;line-height:1.5;margin-top:2px}
+
+/* ── Auto row ── */
+.auto-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+input[type=range]{-webkit-appearance:none;height:4px;background:var(--beige2);border-radius:999px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid var(--teal3)}
+.rv{font-size:12px;font-weight:800;color:var(--teal);min-width:24px;text-align:right}
+.sep{height:1px;background:var(--line);margin:10px 0}
+
+/* ── Record ── */
+.chart-wrap{position:relative;width:100%;height:200px}
+.stat3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px}
+.sbox{background:var(--beige);border-radius:var(--rads);padding:11px;text-align:center}
+.sbox-n{font-size:21px;font-weight:800;color:var(--dark)}
+.sbox-l{font-size:10px;font-weight:800;color:var(--sub);margin-top:2px;text-transform:uppercase;letter-spacing:.4px}
+.his-list{display:flex;flex-direction:column;gap:7px}
+.his-item{display:flex;align-items:center;gap:7px;background:var(--beige);border-radius:var(--rads);padding:10px 12px;font-size:13px}
+.badge{display:inline-block;padding:3px 8px;border-radius:var(--pill);font-size:11px;font-weight:700;white-space:nowrap}
+.b-r{background:var(--blue2);color:var(--blue3)}.b-l{background:var(--teal2);color:var(--teal3)}.b-b{background:var(--green2);color:var(--green3)}.b-s{background:var(--amber2);color:var(--amber3)}
+.his-meta{flex:1;color:var(--sub);font-weight:700;font-size:11px}
+.his-pct{font-size:15px;font-weight:800;color:var(--dark)}.his-cnt{font-size:11px;font-weight:700;color:var(--sub)}
+.empty{text-align:center;color:var(--mut);padding:28px 0;font-size:14px;font-weight:700}
+
+/* ── Settings ── */
+.set-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set-row:last-child{border:none}
+.set-lbl{flex:1;font-size:14px;font-weight:700;color:var(--dark)}
+.set-desc{font-size:11px;font-weight:400;color:var(--sub);margin-top:2px;line-height:1.4}
+.tog{position:relative;width:44px;height:24px;flex:none}
+.tog input{opacity:0;width:0;height:0}
+.tog-sl{position:absolute;inset:0;background:var(--sand);border-radius:999px;cursor:pointer;transition:.25s}
+.tog-sl::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s}
+.tog input:checked+.tog-sl{background:var(--teal)}
+.tog input:checked+.tog-sl::before{transform:translateX(20px)}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.vopt{padding:10px;border:1.5px solid var(--line);border-radius:var(--rads);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:center;color:var(--sub);background:var(--card);transition:all .15s}
+.vopt.on{border-color:var(--teal);background:var(--teal2);color:var(--teal3)}
+select{font-family:inherit;font-size:13px;font-weight:700;padding:8px 12px;border:1.5px solid var(--line);border-radius:var(--radxs);background:var(--card);color:var(--dark);width:100%;outline:none;margin-top:6px}
+select:focus{border-color:var(--teal)}
+.rng-row{display:flex;align-items:center;gap:8px;margin-top:7px}
+textarea{width:100%;min-height:150px;font-family:inherit;font-size:14px;font-weight:700;padding:11px;border:1.5px solid var(--line);border-radius:var(--rads);resize:vertical;line-height:1.9;color:var(--dark);background:var(--beige);outline:none}
+textarea:focus{border-color:var(--teal);background:var(--card)}
+.tip{font-size:12px;font-weight:700;color:var(--amber3);background:var(--amber2);border-left:3px solid var(--amber);border-radius:0 var(--radxs) var(--radxs) 0;padding:8px 11px;margin-top:7px;line-height:1.6}
+@media(max-width:380px){.w-main{font-size:42px}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo"><span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 48 48" width="24" height="24"><path d="M31 14c-6-5-17-1-17 9 0 5 3 8 7 10 4 2 7 4 7 8" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M29 22c0-4-6-6-9-3-3 3-2 9 4 10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M28 29c3-1 6-4 6-9 0-7-7-12-14-10" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="33" cy="34" r="4" fill="currentColor" opacity=".9"/></svg></span><em>청각</em> 재활 훈련</div>
+  </div>
+  <div class="tabs">
+    <button class="tb on" onclick="goTab('train')">훈련</button>
+    <button class="tb" onclick="goTab('record')">기록</button>
+    <button class="tb" onclick="goTab('settings')">설정</button>
+    <button class="tb" onclick="goTab('words')">단어목록</button>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══ TRAIN ══ -->
+<div id="tab-train" class="panel on">
+
+  <div class="card card-sm">
+    <div class="lbl">귀 선택</div>
+    <div class="ear-grid" id="earGrid">
+      <button class="ear-btn on-r" data-m="right" onclick="setMode('right')"><span class="ico">👂</span>우측</button>
+      <button class="ear-btn" data-m="left"  onclick="setMode('left')"><span class="ico">👂</span>좌측</button>
+      <button class="ear-btn" data-m="both"  onclick="setMode('both')"><span class="ico">🎧</span>양쪽</button>
+    </div>
+    <div class="lbl">단계</div>
+    <div class="stage-row" id="stageRow"></div>
+    <div class="s-hint" id="stageHint"></div>
+    <div class="s-prog">
+      <div class="pdots" id="pdots"></div>
+      <span class="ptxt" id="ptxt">이 단계 0% (0문제)</span>
+    </div>
+    <div class="adv-banner" id="advBanner"></div>
+    <div class="weak-panel" id="weakPanel">
+      <div class="weak-title">📊 개선이 필요한 부분</div>
+      <div id="weakList"></div>
+    </div>
+  </div>
+
+  <!-- 훈련 모드: VS 선택 / 자유 듣기 -->
+  <div class="mode-switch" id="modeSwitchWrap">
+    <button class="mode-btn on" id="modeVS" onclick="setTrainMode('vs')">🔀 VS 선택</button>
+    <button class="mode-btn" id="modeFree" onclick="setTrainMode('free')">🎙 자유 듣기</button>
+  </div>
+  <div class="s-hint" id="vsGuide" style="margin-bottom:12px">VS 모드는 선택하면 자동으로 다음 문제가 나와서 다음 버튼을 안 눌러도 돼요.</div>
+
+  <!-- 단어 박스 (탭하면 정답 보기) -->
+  <div class="word-box" id="wordBox" onclick="revealAns()">
+    <div class="word-box-hint" id="wBoxHint">단어를 재생해봐</div>
+    <div class="w-main" id="wMain">—</div>
+    <div class="vs-row" id="vsRow" style="display:none"></div>
+    <div class="w-tap" id="wTap">탭하면 정답 보기</div>
+  </div>
+
+  <div class="card">
+    <div class="btn-row">
+      <button class="btn btn-start" id="mainNextBtn" onclick="nextWord()">▶ 시작</button>
+      <button class="btn btn-icon btn-ghost" onclick="playCurrent()">🔊</button>
+    </div>
+
+    <!-- 자유 듣기 모드 전용: 직접 입력 + 따라말하기 -->
+    <div id="freeSection">
+      <div class="type-area">
+        <div class="type-lbl">직접 입력</div>
+        <div class="type-row">
+          <input class="type-inp" id="typeInp" placeholder="들린 대로 입력 후 Enter…" onkeydown="if(event.key==='Enter')typeCheck()"/>
+          <button class="btn btn-blue btn-sm" onclick="typeCheck()">확인</button>
+        </div>
+        <div class="type-res" id="typeRes"></div>
+      </div>
+
+      <div class="sp-box" id="spBox">
+        <div class="sp-title">🎤 따라 말하기</div>
+        <div class="mic-wrap">
+          <button class="mic-btn" id="micBtn" onclick="toggleRec()">🎙️</button>
+          <div class="sp-res" id="spRes">버튼 누르고 따라 말해봐</div>
+          <div class="sp-note">Chrome 첫 실행 시 마이크 허용 1회 필요</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="markBtns" style="display:none"></div>
+
+    <div class="score-row">
+      <div class="sc-cell ok"><div class="sc-n" id="scOk">0</div><div class="sc-l">맞음</div></div>
+      <div class="sc-cell ng"><div class="sc-n" id="scNg">0</div><div class="sc-l">틀림</div></div>
+    </div>
+    <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    <div class="prow"><span id="plbl">0문제</span><span id="ppct">0%</span></div>
+
+    <div class="sep"></div>
+    <div class="auto-row">
+      <button class="btn btn-ghost" id="autoBtn" onclick="toggleAuto()" style="flex:1">🔄 자동 재생</button>
+      <span style="font-size:11px;font-weight:800;color:var(--sub);white-space:nowrap">간격</span>
+      <input type="range" min="1" max="6" step="1" value="3" id="gapSlider" style="width:64px" oninput="document.getElementById('gapV').textContent=this.value+'초'">
+      <span class="rv" id="gapV">3초</span>
+      <button class="btn btn-save btn-sm" id="saveNowBtn" onclick="saveNow()">저장</button>
+    </div>
+    <div class="auto-row" style="margin-top:9px">
+      <span style="font-size:11px;font-weight:800;color:var(--sub);white-space:nowrap">말하기 속도</span>
+      <input type="range" min="0.45" max="0.95" step="0.05" value="0.72" id="trainRate" style="flex:1" oninput="syncTrainRate(this.value)">
+      <span class="rv" id="trV">0.72</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RECORD ══ -->
+<div id="tab-record" class="panel">
+  <div class="card">
+    <div class="lbl">정답률 추이</div>
+    <div class="chart-wrap"><canvas id="mainChart" role="img" aria-label="날짜별 정답률 추이">날짜별 정답률 추이</canvas></div>
+    <div style="display:flex;gap:12px;margin-top:8px;font-size:11px;font-weight:800">
+      <span style="color:#3a8fb7">● 우측</span><span style="color:#0f7b3a">● 좌측</span><span style="color:#d59628">● 양쪽</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="stat3" id="statRow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+      <div class="lbl" style="margin:0">훈련 기록</div>
+      <div style="display:flex;gap:7px">
+        <button class="btn btn-ghost btn-sm" onclick="renderRecord()">🔄</button>
+        <button class="btn btn-ghost btn-sm" onclick="doCSV()">📥 CSV</button>
+      </div>
+    </div>
+    <div class="his-list" id="hisList"></div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS ══ -->
+<div id="tab-settings" class="panel">
+  <div class="card">
+    <div class="lbl">목소리</div>
+    <div class="vgrid">
+      <button class="vopt on" data-vm="random" onclick="setVM('random')">🎲 랜덤</button>
+      <button class="vopt" data-vm="fixed" onclick="setVM('fixed')">📌 고정</button>
+    </div>
+    <div id="vSelWrap" style="display:none"><select id="vSel" onchange="saveCfg()"></select></div>
+  </div>
+  <div class="card">
+    <div class="lbl">음성 파라미터</div>
+    <div class="set-row">
+      <div class="set-lbl">Pitch 랜덤<div class="set-desc">억양 다양화 — 서울↔부산 극복</div></div>
+      <label class="tog"><input type="checkbox" id="rPitch" checked onchange="saveCfg()"><span class="tog-sl"></span></label>
+    </div>
+    <div class="set-row">
+      <div class="set-lbl">속도 랜덤<div class="set-desc">다양한 말하기 속도 적응</div></div>
+      <label class="tog"><input type="checkbox" id="rRate" checked onchange="saveCfg()"><span class="tog-sl"></span></label>
+    </div>
+    <div class="set-row" style="display:block;padding:12px 0">
+      <div class="set-lbl" style="margin-bottom:4px">기본 속도</div>
+      <div class="rng-row">
+        <input type="range" style="flex:1" min="0.5" max="1.0" step="0.05" value="0.72" id="baseRate" oninput="document.getElementById('brV').textContent=parseFloat(this.value).toFixed(2);saveCfg()">
+        <span class="rv" id="brV">0.72</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="lbl">단계 자동 진급</div>
+    <div class="set-row">
+      <div class="set-lbl">자동 진급 알림<div class="set-desc">10문제 이상 + 목표 정답률 달성 시</div></div>
+      <label class="tog"><input type="checkbox" id="autoAdv" checked onchange="saveCfg()"><span class="tog-sl"></span></label>
+    </div>
+    <div class="set-row" style="display:block;padding:12px 0">
+      <div class="set-lbl" style="margin-bottom:4px">목표 정답률</div>
+      <div class="rng-row">
+        <input type="range" style="flex:1" min="70" max="95" step="5" value="85" id="advPct" oninput="document.getElementById('apV').textContent=this.value+'%';saveCfg()">
+        <span class="rv" id="apV">85%</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="lbl">따라말하기</div>
+    <div class="set-row">
+      <div class="set-lbl">기능 사용<div class="set-desc">Chrome 권장 · 첫 실행 시 마이크 허용 한 번만 하면 계속 사용 가능</div></div>
+      <label class="tog"><input type="checkbox" id="speechOn" checked onchange="toggleSpUI()"><span class="tog-sl"></span></label>
+    </div>
+  </div>
+  <div class="card">
+    <button class="btn btn-danger" style="width:100%" onclick="clearAllRec()">🗑️ 전체 기록 삭제</button>
+  </div>
+</div>
+
+<!-- ══ WORDS ══ -->
+<div id="tab-words" class="panel">
+  <div class="card card-sm">
+    <div class="lbl">귀</div>
+    <div class="ear-grid" id="wEarGrid">
+      <button class="ear-btn on-r" data-m="right" onclick="setWT('right')"><span class="ico">👂</span>우측</button>
+      <button class="ear-btn" data-m="left" onclick="setWT('left')"><span class="ico">👂</span>좌측</button>
+      <button class="ear-btn" data-m="both" onclick="setWT('both')"><span class="ico">🎧</span>양쪽</button>
+    </div>
+    <div class="lbl">단계</div>
+    <div class="stage-row" id="wStageRow"></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <div class="lbl" style="margin:0" id="wTitle">추가 단어목록</div>
+      <button class="btn btn-primary btn-sm" onclick="saveWL()" id="saveWLBtn">저장</button>
+    </div>
+    <textarea id="wArea" placeholder="한 줄에 하나씩&#10;VS 쌍: 오리/오르"></textarea>
+    <div class="tip">💡 기본 단어는 내장 — 추가하면 합쳐서 출제!<br>💡 VS 쌍: <code style="background:rgba(0,0,0,.05);padding:1px 5px;border-radius:4px">오리/오르</code> · 1음절 단계는 자동 VS</div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ══ 단어 데이터 — VS 쌍은 실제로 비슷한 것만 ══ */
+const BASE={
+  right:{
+    sent:[
+      '저희 아버지가 하시는 가게입니다','그대로 바꾸지 않았습니다','여기는 어떤 사람들이 오나요','컴퓨터는 잘 다룰 줄 아시나요','우리집 현관 앞에 두세요',
+      '김치가 쉬어서 맛이 없다','올해 계획을 세웠습니다','재료가 다 떨어졌습니다','오랜만에 외출을 했어요','누구랑 만나고 왔어요',
+      '서로 조심하는게 좋겠다','일찍 다녀야지','오토바이가 쌩하고 지나갔다','우리집은 도로 옆에 있다','햇빛 때문에 눈을 못 뜨겠다',
+      '손가락을 움직일 수가 없어요','버튼 두개를 같이 눌러보세요','엘리베이터가 갑자기 정지했어요','주차할 곳이 없어서 헤맸어요','제가 예상한 것보다 잘 맞는다',
+      '우리는 서로 그런 말이 아닙니다','정말로 빵집에 다녀왔어요','그냥 이것저것 사왔습니다','지금은 생각이 안납니다','누가 먼저랄 것도 없었어요',
+      '저는 매일 일기를 써요','왜 자꾸 시계를 봐요','저는 글씨는 못씁니다','의자가 딱딱해서 불편해요','이제는 아무도 없다',
+      '시간이 꽤 흐른 것 같아요','너무 늦어서 오늘은 안됩니다','아이들이 놀이터에서 놀고있네요','강아지 산책시키고 왔어요','시간 좀 내주세요',
+      '냉동실에 맛있는 아이스크림 있어요','끝나고 바로 오세요','위험하니까 뒤로 물러나세요','이건 꼭 지키고 오셔야해요','결과가 좋아서 다행입니다',
+      '규칙을 잘 지켜야 한다','편하게 쉬다가 가세요','바빠서 정신이 없었어요','예약을 변경해주세요','혼자 열심히 했어요',
+      '핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','더워서 잠을 잘 못잤어요','깜짝 놀라서 벌떡 일어났다','제가 몇번이나 전화를 드렸어요',
+      'TV 광고에서 봤어요','입맛이 별로 없네요','방금 생각이 났어요','목이랑 머리가 아픕니다','시간이 걸려도 괜찮아요',
+      '생일을 진심으로 축하합니다','금요일이 제일 좋다','그사람 보면 전화해주세요','오늘 저녁은 치킨을 시켰다','꼭 그렇게 해야 하나요',
+    ],
+    /* 친숙 2음절 — 실제 최소대조쌍(음소 하나만 다름) */
+    fam2:[
+      '가게/나게','가구/나구','가방/나방','가위/나위','가을/나을',
+      '간단/만단','간장/만장','감기/남기','감자/남자',
+      '거리/너리','거실/너실','건강/넌강','겨울/녀울',
+      '결과/별과','결석/별석','결정/별정','결혼/별혼',
+      '경고/정고','경기/정기','계단/제단','계산/제산',
+      '고기/보기','고민/보민','고생/보생','고장/보장',
+      '공기/봉기','공부/봉부','공사/봉사','구경/주경',
+      '나무/다무','날씨/달씨','날짜/달짜','남자/담자',
+      '내년/대년','내용/대용','내일/대일',
+      '다리/바리','다시/바시','다음/바음','단속/반속',
+      '도로/모로','도움/모움','마감/바감','마당/바당',
+      '마음/바음','머리/버리','메모/베모','무리/부리',
+      '발급/말급','발표/말표','방금/망금','방법/망법',
+      '사고/자고','사람/자람','사실/자실','사용/자용',
+      '산책/잔책','생각/쟁각','서울/저울','선물/전물',
+      '소금/초금','소리/초리','손목/촌목','수리/주리',
+      '수박/주박','시간/지간','시계/지계','시작/지작',
+      '식당/직당','신경/진경','신문/진문','신발/진발',
+      '사랑/사람','대답/대박','비누/지네','발목/탈모',
+    ],
+    /* 비친숙 2음절 — 모음 하나 차이 / 자음 하나 차이 */
+    unfam2:[
+      '머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소갠/조갠','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리','갈라/발라','개시/배시','기로/비로',
+      '오리/오루','리리/루루','아리/아루','야기/야구','마디/마드',
+      '가디/가드','디자/디주','비시/비수','디디/두두','비비/부부',
+      '기기/구구','나디/나두','라리/라루','바비/바부','시기/시구',
+      '니기/니구','미디/미두','가리/가루','다기/다구','모기/모구',
+      '고요/교요','가요/강요','사유/사임','사실/사수','순찰/성찰',
+      '취미/추미','승리/승루','가야/가요','고마/고무','나라/나루',
+      '자료/차료','고개/고배','기사/기차','장사/장수','의족/의록',
+      '결심/결삼','여치/여기','선약/선아','습도/즙도','적발/적바',
+      '매료/매로','모래/모레','엄숙/업숙','합격/합겨','날개/말개',
+      '효심/효식','어색/여색','온돌/온들','이불/이블','절도/절두',
+      '언약/연약','난동/만동','탄소/단소','분말/불말','감소/담소',
+    ],
+    fam1:['감','개','겁','곤','공','귀','굴','글','길','꽃','꿈','끈','끝','나','날','낮','너','눈','달','닭','독','돈','돌','땀','땅','떡','또','뜻','말','맛','멋','목','몸','문','물','밖','반','발','밤','밥','방','배','벌','벽','별','병','봄','분','불','비','빵','산','살','새','속','손','술','신','실','안','알','앞','약','역','열','옆','옷','운','일','입','잠','장','저','전','점','줄','쥐','집','차','창','책','칼','컵','코','탓','통','파','팔','표','풀','해','형','힘'],
+    unfam1:['캔','층','삼','을','당','난','식','뿔','죽','권','상','광','놀','회','늦','생','단','빗','악','덜','심','경','만','의','접','덕','갑','줄','석','별','금','본','잘','초','납','액','탑','극','자','사','핵','교','활','운','먹','추','민','음','껌','샘','명','골','학','녹','즉','북','근','농','바','캡','면','궁','틈','맵','리','와','짝','관','큐','털','빰','진','이','카','동','평','성','걸','보','묵','승','건','고','합','선','수','황','객','침','색','솟','엄','원','좌','봉','정','간','읍','록','팁','겁','조','곡','쇠','줌','올','족','연','모','특','취','총','뼈','다','염','링','솔','길','일','놈','낼','법','움','미','견','치','룸','깐','답','적'],
+  },
+  left:{
+    sent:[
+      '저희 아버지가 하시는 가게입니다','그대로 바꾸지 않았습니다','여기는 어떤 사람들이 오나요','우리집 현관 앞에 두세요','김치가 쉬어서 맛이 없다',
+      '올해 계획을 세웠습니다','오랜만에 외출을 했어요','누구랑 만나고 왔어요','서로 조심하는게 좋겠다','일찍 다녀야지',
+      '우리집은 도로 옆에 있다','햇빛 때문에 눈을 못 뜨겠다','엘리베이터가 갑자기 정지했어요','주차할 곳이 없어서 헤맸어요','정말로 빵집에 다녀왔어요',
+      '저는 글씨는 못씁니다','의자가 딱딱해서 불편해요','이제는 아무도 없다','시간이 꽤 흐른 것 같아요','너무 늦어서 오늘은 안됩니다',
+      '아이들이 놀이터에서 놀고있네요','강아지 산책시키고 왔어요','시간 좀 내주세요','냉동실에 맛있는 아이스크림 있어요','끝나고 바로 오세요',
+      '위험하니까 뒤로 물러나세요','결과가 좋아서 다행입니다','규칙을 잘 지켜야 한다','편하게 쉬다가 가세요','바빠서 정신이 없었어요',
+      '예약을 변경해주세요','핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','깜짝 놀라서 벌떡 일어났다','TV 광고에서 봤어요',
+      '입맛이 별로 없네요','방금 생각이 났어요','목이랑 머리가 아픕니다','시간이 걸려도 괜찮아요','생일을 진심으로 축하합니다',
+    ],
+    fam2:[
+      '나비/마비','노래/모래','너무/머무','내일/매일','레고/메고',
+      '나라/마라','낙서/막서','냉면/맹면','나들이/마들이','노을/모을',
+      '나무/마무','나기/마기','노리/모리','너구/머구','나도/마도',
+      '가게/나게','가구/나구','가방/나방','가을/나을','간단/만단',
+      '감기/남기','감자/남자','건강/넌강','겨울/녀울','결과/별과',
+      '결정/별정','경고/정고','경기/정기','고기/보기','고민/보민',
+      '날씨/달씨','날짜/달짜','남자/담자','내년/대년','내용/대용',
+      '다리/바리','다시/바시','다음/바음','도로/모로','마음/바음',
+      '머리/버리','메모/베모','무리/부리','사고/자고','사람/자람',
+      '사실/자실','사용/자용','생각/쟁각','서울/저울','소리/초리',
+      '수리/주리','수박/주박','시간/지간','식당/직당','신경/진경',
+      '사랑/사람','대답/대박','발목/탈모',
+    ],
+    unfam2:[
+      '머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소갠/조갠','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리','갈라/발라','개시/배시','기로/비로',
+      '노아/모아','널고/멀고','너러/머러','너지/머지','내고/매고',
+      '소리/수리','조리/주리','처리/서리','가치/가시','사와/차와',
+      '나무/마무','나기/마기','노리/모리','너구/머구','나도/마도',
+      '오리/오루','리리/루루','아리/아루','야기/야구','마디/마드',
+      '가디/가드','비시/비수','기기/구구','시기/시구','미디/미두',
+      '가요/강요','사유/사임','사실/사수','순찰/성찰','취미/추미',
+      '자료/차료','고개/고배','장사/장수','결심/결삼','어색/여색',
+      '온돌/온들','이불/이블','언약/연약','난동/만동','탄소/단소',
+      '분말/불말','감소/담소','합격/합겨','날개/말개','효심/효식',
+    ],
+    fam1:['감','개','겁','곤','공','귀','굴','글','길','꽃','꿈','끈','끝','나','날','낮','너','눈','달','닭','독','돈','돌','땀','땅','떡','또','뜻','말','맛','멋','목','몸','문','물','밖','반','발','밤','밥','방','배','벌','벽','별','병','봄','분','불','비','빵','산','살','새','속','손','술','신','실','안','알','앞','약','역','열','옆','옷','운','일','입','잠','장','저','전','점','줄','쥐','집','차','창','책','칼','컵','코','탓','통','파','팔','표','풀','해','형','힘'],
+    unfam1:['캔','층','삼','을','당','난','식','뿔','죽','권','상','광','놀','회','늦','생','단','빗','악','덜','심','경','만','의','접','덕','갑','줄','석','별','금','본','잘','초','납','액','탑','극','자','사','핵','교','활','운','먹','추','민','음','껌','샘','명','골','학','녹','즉','북','근','농','바','캡','면','궁','틈','맵','리','와','짝','관','큐','털','진','이','카','동','평','성','걸','보','묵','건','고','합','선','수','황','객','침','색','솟','엄','원','좌','봉','정','간','읍','록','팁','겁','조','곡','쇠','줌','올','족','연','모','특','취','총','뼈','다','염','링','솔','길','일','놈','낼','법','움','미','견','치','룸','깐','답','적'],
+  },
+  both:{
+    sent:['오늘 날씨 좋아요','밥 먹었어요','집에 가요','물 주세요','고마워요','미안해요','잠깐만요','어디 가요','천천히 말해줘요','다시 말해줘요','잘 모르겠어요','알겠어요','화장실 어디예요','배 고파요','피곤해요','먼저 갈게요','뭐 먹을까요','이거 얼마예요','시간 있어요','다시 한번 말해줄 수 있어요'],
+    fam2:['사랑/사람','사유/사용','수박/주박','공포/공토','발목/발모','소금/초금','신경/진경','대답/대박','소리/초리','비누/미누','가방/나방','나무/다무','고기/보기','날씨/달씨','마음/바음'],
+    unfam2:[
+      '머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소갠/조갠','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리','갈라/발라','개시/배시','기로/비로','오리/오루','노아/모아','리리/루루','소리/수리','가치/가시','너러/머러','조리/주리','야기/야구','비시/비수','기기/구구','실비/질비','제거/제대','고요/교요','사실/사수','자료/차료'],
+    fam1:['감','개','나','날','눈','달','말','맛','몸','물','밥','손','일','집','책','코','팔','해','힘','꽃'],
+    unfam1:['캔','층','삼','을','당','식','뿔','죽','권','상','광','놀','단','빗','심','경','만','접','덕','갑'],
+  },
+};
+
+const STAGES=[
+  {key:'sent',   label:'문장',        diff:'★',     hint:'문장 듣기'},
+  {key:'fam2',   label:'친숙 2음절',  diff:'★★',    hint:'친숙한 2음절 단어'},
+  {key:'unfam2', label:'비친숙 2음절',diff:'★★★',   hint:'비슷한 2음절 소리 구분'},
+  {key:'fam1',   label:'친숙 1음절',  diff:'★★★★',  hint:'짧은 1음절 단어 구분'},
+  {key:'unfam1', label:'비친숙 1음절',diff:'★★★★★', hint:'가장 짧고 어려운 1음절 구분'},
+];
+
+const ONE_SYL_VS={
+  fam1:[
+    '감/밤','개/게','겁/컵','곤/공','공/콩','귀/기','굴/글','길/김','꽃/곧','꿈/금','끈/큰','끝/끗',
+    '나/다','날/달','낮/낫','너/더','눈/문','달/발','닭/닥','독/돌','돈/손','돌/볼','땀/밤','땅/방',
+    '떡/덕','또/도','뜻/뜯','말/발','맛/낫','멋/못','목/몫','몸/봄','문/눈','물/불','밖/박',
+    '반/판','발/팔','밤/밥','밥/법','방/망','배/베','벌/별','벽/병','별/벌','병/명','봄/몸',
+    '분/문','불/물','비/피','빵/방','산/잔','살/쌀','새/세','속/손','손/돈','술/줄','신/진',
+    '실/질','안/알','알/얼','앞/압','약/역','열/얼','옆/엽','옷/옥','운/문','입/잎','잠/장',
+    '장/창','저/처','전/천','점/첨','쥐/쥬','집/칩','차/자','책/챙','칼/갈','코/고','탓/닷',
+    '통/동','파/바','표/펴','풀/불','해/헤','형/경','힘/김'
+  ],
+  unfam1:[
+    '캔/캡','층/청','삼/삽','을/울','당/탕','난/남','식/씩','뿔/불','죽/중','권/건','상/장','광/강',
+    '놀/롤','회/휘','늦/낫','생/샘','단/탄','빗/빛','악/앞','덜/털','심/짐','경/형','만/망',
+    '의/이','접/젓','덕/떡','갑/값','줄/술','석/섬','별/벌','금/김','본/봉','잘/절','초/조',
+    '납/남','액/앵','탑/답','극/급','자/차','사/자','핵/색','교/겨','활/월','운/훈','먹/목',
+    '추/주','민/믿','음/응','껌/검','샘/생','명/병','골/공','학/확','녹/목','즉/죽','북/복',
+    '근/금','농/공','바/파','면/명','궁/공','틈/팀','맵/맘','리/니','와/화','짝/작','관/광',
+    '큐/규','털/덜','진/신','이/의','카/가','동/통','평/병','성/상','걸/결','보/모','묵/목',
+    '승/성','건/권','고/코','합/압','선/전','수/주','황/왕','객/색','침/짐','색/핵','솟/속',
+    '엄/음','원/언','좌/자','봉/본','정/청','간/강','읍/업','록/녹','팁/팀','조/초','곡/공',
+    '쇠/쇄','줌/중','올/울','족/쪽','연/열','모/보','특/득','취/쥐','총/종','뼈/펴','다/타',
+    '염/엄','링/린','솔/손','길/김','놈/논','낼/날','법/밥','움/음','미/니','견/건','치/지',
+    '룸/룬','깐/간','답/탑','적/점'
+  ]
+};
+
+/* 추가 VS 데이터 — 원래 단어 + 사용자가 말한 쌍 + 비슷한 음절쌍 */
+const EXTRA_VS_2={
+  fam2:[
+    '머리/모리','머리/무리','머리/마리','거리/고리','거리/구리','거리/버리','거리/거래','고리/구리',
+    '다리/두리','다리/대리','오리/우리','오리/오르','소리/수리','조리/주리','고기/고개','고기/보기',
+    '소금/조금','소개/조개','고요/보요','가요/자요','가지/바지','갈라/발라','개시/배시',
+    '비어/부어','지어/주어','구어/기어','쉬어/쥐어','시어/지어','사요/자요','서요/저요','수어/주어',
+    '가방/나방','나무/마무','노래/모래','내일/매일','마음/바음','발목/팔목','방금/방문','사람/사랑',
+    '대답/대박','날씨/달씨','시간/지간','시계/지계','식당/직당','신발/진발','신경/진경','소리/초리'
+  ],
+  unfam2:[
+    '머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소갠/조갠',
+    '소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리',
+    '갈라/발라','개시/배시','기로/비로','가리/고리','가리/구리','고리/고루','기리/구리','기어/구어',
+    '비어/비우','부어/보어','지어/지우','주어/조어','시어/쉬어','쥐어/지어','쉬어/시어','사개/자개',
+    '소게/조게','소갠/조갠','서개/저개','사금/자금','소근/조근','소곰/조곰','수금/주금',
+    '가요/까요','가요/과요','자요/차요','고요/교요','보요/보유','모요/보요','거라/버라','기라/비라',
+    '가라/바라','갈라/깔라','개시/게시','개시/계시','배시/베시','기루/비루','기로/기루','비로/비루',
+    '오리/오루','아리/오리','어리/오리','우리/우루','우라/우리','리리/루루','기기/구구','비비/부부',
+    '시기/시구','미디/미두','나디/나두','라리/라루','바비/바부','가디/가드','마디/마드','야기/야구'
+  ]
+};
+function addExtraPairs(){
+  ['right','left','both'].forEach(m=>{
+    ['fam2','unfam2'].forEach(s=>{
+      if(!BASE[m][s])BASE[m][s]=[];
+      (EXTRA_VS_2[s]||[]).forEach(x=>{if(!BASE[m][s].includes(x))BASE[m][s].push(x);});
+    });
+  });
+  ['fam1','unfam1'].forEach(s=>{
+    if(!ONE_SYL_VS[s])ONE_SYL_VS[s]=[];
+    ONE_SYL_VS[s]=Array.from(new Set(ONE_SYL_VS[s].map(x=>x.replace(/\|/g,'/'))));
+  });
+}
+addExtraPairs();
+
+
+const WEAKNESS_RULES=[
+  {id:'mn', label:'ㅁ↔ㄴ 구분', desc:'나/마, 너/머, 노/모 혼동 — 좌측 귀 핵심 과제', test:w=>/[나너노누내난널]/.test(w)||/[마머모무매만멀]/.test(w)},
+  {id:'rn', label:'ㄹ↔ㄴ 구분', desc:'라/나, 리/니 혼동 — 유음 구분 훈련 필요', test:w=>/[라리루레로]/.test(w)||/[나니누네노]/.test(w)},
+  {id:'ng', label:'ㅇ 초성 인식', desc:'ㅇ 초성 단어 구분 어려움 (아/오/우/이)', test:w=>/^[아어오우이외]/.test(w)},
+  {id:'bd', label:'받침 구분', desc:'ㄱ/ㅇ/ㄴ 받침 혼동 (골→공, 곳→곧)', test:w=>/[닭곳곧골공밥밤]/.test(w)},
+  {id:'sv', label:'ㅅ↔ㅈ 구분', desc:'서/저, 사/자, 소/조 혼동', test:w=>/[서사소수시]/.test(w)||/[저자조주지]/.test(w)},
+];
+
+/* ══ 상태 ══ */
+let mode='right', stage='unfam2', trainMode='vs';
+let wt='right', ws='unfam2';
+let correct=0, wrong=0, total=0, sCorrect=0, sTotal=0;
+let wrongWords=[], recentRaws=[], recentVoiceNames=[];
+let curWord='', curPair=null, scored=false;
+let autoOn=false, autoTmr=null;
+let vm='random', voices=[], Rec=null, recOn=false;
+let chartInst=null;
+
+const G=id=>document.getElementById(id);
+const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+
+let userWords=ls('ciW6',{});
+let sessions =ls('ciS6',[]);
+let cfg=ls('ciCfg6',{vm:'random',baseRate:0.72,rPitch:true,rRate:true,speechOn:true,autoAdv:true,advPct:85});
+
+function mergedList(m,s){
+  const base=(BASE[m]&&BASE[m][s])||[];
+  const user=(userWords[m]&&userWords[m][s])||[];
+  const all=[...base];
+  user.forEach(w=>{if(!all.includes(w))all.push(w);});
+  return all;
+}
+
+/* ══ 탭 ══ */
+function goTab(t){
+  ['train','record','settings','words'].forEach((x,i)=>{
+    G('tab-'+x).classList.toggle('on',x===t);
+    document.querySelectorAll('.tb')[i].classList.toggle('on',x===t);
+  });
+  if(t==='record')renderRecord();
+  if(t==='words')renderWL();
+}
+
+/* ══ 훈련 모드 (VS / 자유) ══ */
+function setTrainMode(m){
+  trainMode=m;
+  G('modeVS').classList.toggle('on',m==='vs');
+  G('modeFree').classList.toggle('on',m==='free');
+  updateUIForMode();
+  loadWord();
+}
+
+function updateUIForMode(){
+  const isSent=stage==='sent';
+  const isVS=trainMode==='vs';
+  // 문장이면 항상 자유 모드 UI
+  G('freeSection').style.display=(isSent||!isVS)?'':'none';
+  G('markBtns').style.display='none';
+  // 모드 스위치는 문장에서 숨기기
+  G('modeSwitchWrap').style.display=isSent?'none':'';
+  G('vsGuide').style.display=(!isSent&&isVS)?'':'none';
+}
+
+/* ══ 모드 ══ */
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('#earGrid .ear-btn').forEach(b=>{
+    b.className='ear-btn'+(b.dataset.m===m?(m==='right'?' on-r':m==='left'?' on-l':' on-b'):'');
+  });
+  sCorrect=0;sTotal=0;wrongWords=[];recentRaws=[];
+  renderStageRow();loadWord();checkAdv();updateWeak();
+}
+
+/* ══ 단계 ══ */
+function renderStageRow(){
+  G('stageRow').innerHTML=STAGES.map(s=>
+    '<button class="s-pill'+(s.key===stage?' on':'')+'" onclick="setStage(\''+s.key+'\')">'
+    +s.label+' <small style="font-weight:700;font-size:11px;color:var(--green)">'+s.diff+'</small></button>'
+  ).join('');
+  const info=STAGES.find(s=>s.key===stage)||STAGES[0];
+  G('stageHint').textContent=info.hint;
+  updateUIForMode();
+  renderPDots();
+}
+
+function setStage(s){
+  stage=s;sCorrect=0;sTotal=0;wrongWords=[];recentRaws=[];
+  renderStageRow();loadWord();
+  G('advBanner').style.display='none';updateWeak();
+}
+
+/* ══ 단어 로드 ══ */
+function loadWord(){
+  curWord='';curPair=null;scored=false;
+  const m=G('wMain');
+  m.textContent='—';
+  m.classList.remove('show'); // 블러 상태로 리셋
+  G('vsRow').style.display='none';
+  G('wBoxHint').textContent='단어를 재생해봐';
+  G('wTap').classList.remove('hide');
+  G('typeInp').value='';G('typeRes').textContent='';G('typeRes').className='type-res';
+  G('spRes').textContent='버튼 누르고 따라 말해봐';G('spRes').className='sp-res';
+  if(G('mainNextBtn'))G('mainNextBtn').textContent='▶ 시작';
+}
+
+/* ══ VS 쌍 중복 제거 ══ */
+function cleanPair(parts){
+  const seen=new Set(),clean=[];
+  parts.forEach(p=>{const t=p.trim();if(t&&!seen.has(t)){seen.add(t);clean.push(t);}});
+  return clean;
+}
+
+function makeVSPair(word, list){
+  const pool=list.map(x=>String(x).trim()).filter(x=>x && !/[|/]/.test(x) && x!==word);
+  if(!pool.length)return null;
+  const decoy=pool[Math.floor(Math.random()*pool.length)];
+  return Math.random()<0.5?[word,decoy]:[decoy,word];
+}
+
+/* ══ 단어 선택 ══ */
+function pickWord(){
+  let wl=mergedList(mode,stage);
+  if(trainMode==='vs' && (stage==='fam1'||stage==='unfam1')){
+    const custom=wl.filter(x=>/[|/]/.test(String(x)));
+    wl=[...(ONE_SYL_VS[stage]||[]), ...custom];
+  }
+  if(!wl.length)return null;
+  let raw,tries=0;
+  do{raw=wl[Math.floor(Math.random()*wl.length)].trim();tries++;}
+  while(recentRaws.includes(raw)&&tries<15);
+  recentRaws.push(raw);if(recentRaws.length>6)recentRaws.shift();
+
+  if(/[|/]/.test(raw)){
+    const parts=cleanPair(raw.split(/[|/]/));
+    if(parts.length<2)return{word:parts[0]||raw,pair:null};
+    return{word:parts[Math.floor(Math.random()*parts.length)],pair:parts};
+  }
+  return{word:raw,pair:null};
+}
+
+/* ══ 다음 단어 — 항상 블러로 시작 ══ */
+function nextWord(){
+  const p=pickWord();
+  if(!p){alert('단어가 없어요!');return;}
+  curWord=p.word;curPair=p.pair;scored=false;
+
+  const m=G('wMain');
+  // 이전 정답이 새 문제에 순간적으로 보이지 않게 비우고 블러 상태를 먼저 확정한다.
+  m.classList.remove('show');
+  m.textContent='—';
+  void m.offsetWidth;
+  m.textContent=curWord;
+
+  G('wTap').classList.remove('hide');
+  G('typeInp').value='';G('typeRes').textContent='';G('typeRes').className='type-res';
+  G('spRes').textContent='버튼 누르고 따라 말해봐';G('spRes').className='sp-res';
+
+  const isVS=trainMode==='vs'&&stage!=='sent';
+  if(p.pair&&isVS){
+    G('vsRow').style.display='flex';
+    G('vsRow').innerHTML=p.pair.map((w,i)=>
+      (i>0?'<span class="vs-sep">/</span>':'')+
+      '<span class="vs-chip" data-w="'+w+'" onclick="tapChip(event,this)">'+w+'</span>'
+    ).join('');
+    G('wBoxHint').textContent='둘 중 하나가 재생됐어요';
+  }else{
+    G('vsRow').style.display='none';
+    G('wBoxHint').textContent=stage==='sent'?'문장을 들어봐':'단어를 들어봐';
+  }
+  if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 다음';G('mainNextBtn').className='btn btn-next';}
+  speak(curWord);
+}
+
+function softHaptic(kind){try{if(navigator.vibrate){navigator.vibrate(kind==="bad"?[18,35,18]:12);}}catch(e){}}
+function tone(kind){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ctx=new AC();const o=ctx.createOscillator();const g=ctx.createGain();o.type="sine";o.frequency.value=kind==="good"?740:(kind==="bad"?190:420);g.gain.setValueAtTime(0.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.045,ctx.currentTime+0.015);g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.12);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+0.13);setTimeout(()=>ctx.close&&ctx.close(),180);}catch(e){}}
+function pulseWordBox(){const box=G("wordBox");if(!box)return;box.classList.remove("playing");void box.offsetWidth;box.classList.add("playing");}
+
+/* ══ 칩 탭 ══ */
+function tapChip(e,el){
+  e.stopPropagation();
+  if(!curWord)return;
+  const ok=el.dataset.w===curWord;
+  softHaptic(ok?"good":"bad"); tone(ok?"good":"bad");
+  document.querySelectorAll('.vs-chip').forEach(c=>{
+    c.className='vs-chip'+(c.dataset.w===curWord?' ans':'');
+  });
+  el.className='vs-chip '+(ok?'ok':'ng');
+  G('wMain').classList.add('show');G('wTap').classList.add('hide');
+  if(!scored){
+    if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}
+    total++;sTotal++;scored=true;
+    updateScore();checkAdv();updateWeak();
+  }
+  setTimeout(nextWord,1100);
+}
+
+/* ══ 단어박스 탭 — 정답 보기/숨기기 ══ */
+function revealAns(){
+  if(!curWord)return;
+  const m=G('wMain');
+  const showing=m.classList.contains('show');
+  m.classList.toggle('show',!showing);
+  G('wTap').classList.toggle('hide',!showing);
+}
+
+function playCurrent(){if(curWord)speak(curWord);}
+
+/* ══ 직접 입력 ══ */
+function typeCheck(){
+  const v=G('typeInp').value.trim();
+  if(!v||!curWord)return;
+  const ok=norm(v)===norm(curWord);
+  const el=G('typeRes');
+  el.textContent='"'+v+'" → '+(ok?'✓ 맞아요!':'✗ 틀려요 (정답: '+curWord+')');
+  el.className='type-res '+(ok?'ok':'ng');
+  G('wMain').classList.add('show');G('wTap').classList.add('hide');
+  if(!scored){
+    if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}
+    total++;sTotal++;scored=true;
+    updateScore();checkAdv();updateWeak();
+  }
+  G('typeInp').value='';
+}
+
+/* ══ 맞음/틀림 (문장) ══ */
+function mark(ok){
+  if(!curWord){alert('먼저 단어를 재생하세요!');return;}
+  if(!scored){
+    if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}
+    total++;sTotal++;scored=true;
+    updateScore();checkAdv();updateWeak();
+  }
+  nextWord();
+}
+
+/* ══ 점수 ══ */
+function updateScore(){
+  G('scOk').textContent=correct;G('scNg').textContent=wrong;
+  const pct=total>0?Math.round(correct/total*100):0;
+  G('pfill').style.width=pct+'%';
+  G('plbl').textContent=total+'문제';G('ppct').textContent=pct+'%';
+  renderPDots();
+}
+function renderPDots(){
+  const pct=sTotal>0?Math.round(sCorrect/sTotal*100):0;
+  const filled=Math.round(pct/20);
+  const c=G('pdots');c.innerHTML='';
+  for(let i=0;i<5;i++){const d=document.createElement('div');d.className='pdot'+(i<filled?' on':'');c.appendChild(d);}
+  G('ptxt').textContent='이 단계 '+pct+'% ('+sTotal+'문제)';
+}
+function checkAdv(){
+  if(!cfg.autoAdv)return;
+  const thr=cfg.advPct||85;
+  const pct=sTotal>=10?Math.round(sCorrect/sTotal*100):0;
+  const si=STAGES.findIndex(s=>s.key===stage);
+  const b=G('advBanner');
+  if(sTotal>=10&&pct>=thr&&si<STAGES.length-1){b.textContent='🎉 정답률 '+pct+'%! "'+STAGES[si+1].label+'" 단계로 넘어가볼까요?';b.style.display='block';}
+  else b.style.display='none';
+}
+function updateWeak(){
+  if(wrongWords.length<5){G('weakPanel').style.display='none';return;}
+  const counts={};WEAKNESS_RULES.forEach(r=>{counts[r.id]=0;});
+  wrongWords.forEach(w=>{WEAKNESS_RULES.forEach(r=>{if(r.test(w))counts[r.id]++;});});
+  const t=wrongWords.length;
+  const sorted=WEAKNESS_RULES.map(r=>({...r,cnt:counts[r.id],pct:Math.round(counts[r.id]/t*100)}))
+    .filter(r=>r.cnt>0).sort((a,b)=>b.cnt-a.cnt).slice(0,3);
+  if(!sorted.length){G('weakPanel').style.display='none';return;}
+  G('weakPanel').style.display='block';
+  G('weakList').innerHTML=sorted.map(r=>
+    '<div class="weak-item"><div class="weak-lbl">'+r.label+' — '+r.desc+'</div>'
+    +'<div style="font-size:11px;color:var(--amber3);margin-bottom:3px">틀린 단어 중 '+r.pct+'% ('+r.cnt+'개)</div>'
+    +'<div class="weak-bar-bg"><div class="weak-bar" style="width:'+Math.min(r.pct,100)+'%"></div></div></div>'
+  ).join('');
+}
+
+/* ══ 세션 ══ */
+function saveSession(){
+  if(total===0)return;
+  const info=STAGES.find(s=>s.key===stage)||{label:stage};
+  sessions.push({date:new Date().toLocaleDateString('ko-KR'),ts:Date.now(),mode,stage,stageLabel:info.label,correct,wrong,total,pct:Math.round(correct/total*100)});
+  sv('ciS6',sessions);
+}
+function saveNow(){
+  if(total===0){alert('저장할 훈련 기록이 아직 없어요.');return;}
+  saveSession();
+  correct=0;wrong=0;total=0;sCorrect=0;sTotal=0;wrongWords=[];recentRaws=[];scored=false;
+  updateScore();G('advBanner').style.display='none';G('weakPanel').style.display='none';loadWord();
+  if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 시작';G('mainNextBtn').className='btn btn-start';}
+  const sb=G('saveNowBtn'); if(sb){sb.classList.add('saved'); setTimeout(()=>sb.classList.remove('saved'),650);} softHaptic('good'); tone('good');
+  alert('기록에 저장했어요.');
+}
+
+function resetSession(){
+  if(total>0){if(!confirm('현재 세션을 저장하고 초기화할까요?'))return;saveSession();}
+  correct=0;wrong=0;total=0;sCorrect=0;sTotal=0;wrongWords=[];recentRaws=[];scored=false;
+  updateScore();G('advBanner').style.display='none';G('weakPanel').style.display='none';
+}
+window.addEventListener('beforeunload',saveSession);
+
+/* ══ 음성 합성 ══ */
+function loadVoices(){
+  voices=speechSynthesis.getVoices();
+  const sel=G('vSel');sel.innerHTML='';
+  voices.forEach((v,i)=>{
+    const o=document.createElement('option');
+    o.value=i;o.textContent=v.name+' ('+v.lang+')';
+    if(v.lang.startsWith('ko'))o.selected=true;
+    sel.appendChild(o);
+  });
+}
+speechSynthesis.onvoiceschanged=loadVoices;
+setTimeout(loadVoices,300);
+
+function getVoiceRate(name,base){
+  const n=(name||'').toLowerCase();
+  if(n.includes('남')||n.includes('male')||n.includes('유인준')||n.includes('세현'))
+    return Math.min(1.0,base*1.12);
+  return base;
+}
+
+function speak(text){
+  pulseWordBox();
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ko-KR';
+  const base=parseFloat(G('baseRate').value)||0.72;
+  const ko=voices.filter(v=>v.lang.startsWith('ko'));
+  let cv=null;
+  if(vm==='random'&&ko.length>1){
+    let idx,tries=0;
+    do{idx=Math.floor(Math.random()*ko.length);tries++;}
+    while(recentVoiceNames.includes(ko[idx].name)&&tries<10);
+    cv=ko[idx];recentVoiceNames.push(cv.name);
+    if(recentVoiceNames.length>3)recentVoiceNames.shift();
+    u.voice=cv;
+  }else if(vm==='fixed'){
+    const idx=parseInt(G('vSel').value);if(voices[idx]){cv=voices[idx];u.voice=cv;}
+  }else if(ko.length){cv=ko[0];u.voice=cv;}
+  let nr=getVoiceRate(cv?cv.name:'',base);
+  if(stage==='sent')nr=Math.max(0.45,nr*0.86);
+  u.rate=cfg.rRate?Math.max(0.45,Math.min(1.0,nr+(Math.random()-.5)*.08)):nr;
+  u.pitch=cfg.rPitch?Math.max(0.65,Math.min(1.75,1+(Math.random()-.5)*.65)):1;
+  speechSynthesis.speak(u);
+}
+
+/* ══ 따라말하기 ══ */
+function norm(s){return s.replace(/[\s.,!?~]/g,'');}
+function newRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  const r=new SR();
+  r.lang='ko-KR';r.interimResults=false;r.maxAlternatives=5;
+  r.onresult=e=>{
+    const alts=Array.from(e.results[0]).map(a=>a.transcript.trim());
+    const heard=alts[0];
+    const ok=alts.some(h=>norm(h)===norm(curWord));
+    G('spRes').textContent='"'+heard+'" → '+(ok?'✓ 맞아요!':'✗ 달라요');
+    G('spRes').className='sp-res '+(ok?'ok':'ng');
+    G('wMain').classList.add('show');G('wTap').classList.add('hide');
+    if(!scored){
+      if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}
+      total++;sTotal++;scored=true;
+      updateScore();checkAdv();updateWeak();
+    }
+    stopRec();
+  };
+  r.onerror=ev=>{G('spRes').textContent='인식 실패('+ev.error+') — 직접 입력 이용';G('spRes').className='sp-res ng';stopRec();};
+  r.onend=()=>stopRec();
+  return r;
+}
+function toggleRec(){
+  if(recOn){stopRec();return;}
+  if(!curWord){alert('먼저 단어를 재생하세요!');return;}
+  Rec=newRec();
+  if(!Rec){alert('Chrome 브라우저에서만 음성인식이 지원돼요!');return;}
+  recOn=true;G('micBtn').classList.add('rec');G('micBtn').textContent='⏹️';
+  G('spRes').textContent='🎙️ 듣는 중 — 말해봐';G('spRes').className='sp-res';
+  try{Rec.start();}catch(e){stopRec();}
+}
+function stopRec(){
+  recOn=false;G('micBtn').classList.remove('rec');G('micBtn').textContent='🎙️';
+  try{Rec&&Rec.stop();}catch{}
+}
+function toggleSpUI(){cfg.speechOn=G('speechOn').checked;G('spBox').style.display=cfg.speechOn?'':'none';saveCfg();}
+
+/* ══ 자동 재생 ══ */
+function toggleAuto(){
+  if(autoOn){clearInterval(autoTmr);autoTmr=null;autoOn=false;G('autoBtn').textContent='🔄 자동 재생';speechSynthesis.cancel();}
+  else{autoOn=true;G('autoBtn').textContent='⏹️ 자동 정지';nextWord();const gap=(parseInt(G('gapSlider').value)||3)*1000;autoTmr=setInterval(nextWord,gap+2200);}
+}
+
+/* ══ 설정 ══ */
+function syncTrainRate(v){G('trV').textContent=parseFloat(v).toFixed(2);G('baseRate').value=v;G('brV').textContent=parseFloat(v).toFixed(2);saveCfg();}
+function setVM(m){vm=m;cfg.vm=m;document.querySelectorAll('.vopt').forEach(b=>b.classList.toggle('on',b.dataset.vm===m));G('vSelWrap').style.display=m==='fixed'?'':'none';saveCfg();}
+function saveCfg(){cfg.baseRate=parseFloat(G('baseRate').value);cfg.rPitch=G('rPitch').checked;cfg.rRate=G('rRate').checked;cfg.speechOn=G('speechOn').checked;cfg.autoAdv=G('autoAdv').checked;cfg.advPct=parseInt(G('advPct').value);cfg.vm=vm;sv('ciCfg6',cfg);}
+function applyCfg(){
+  G('baseRate').value=cfg.baseRate||0.72;G('brV').textContent=parseFloat(cfg.baseRate||0.72).toFixed(2);if(G('trainRate')){G('trainRate').value=cfg.baseRate||0.72;G('trV').textContent=parseFloat(cfg.baseRate||0.72).toFixed(2);}
+  G('rPitch').checked=cfg.rPitch!==false;G('rRate').checked=cfg.rRate!==false;
+  G('speechOn').checked=cfg.speechOn!==false;G('autoAdv').checked=cfg.autoAdv!==false;
+  G('advPct').value=cfg.advPct||85;G('apV').textContent=(cfg.advPct||85)+'%';
+  setVM(cfg.vm||'random');toggleSpUI();
+}
+function clearAllRec(){if(!confirm('모든 훈련 기록을 삭제할까요?'))return;sessions=[];sv('ciS6',[]);alert('삭제 완료!');}
+
+/* ══ 기록 ══ */
+function groupedSessions(){
+  const map={};
+  sessions.forEach(s=>{
+    const key=[s.date,s.mode,s.stage].join('|');
+    if(!map[key])map[key]={date:s.date,ts:s.ts||0,mode:s.mode,stage:s.stage,stageLabel:s.stageLabel||s.stage,correct:0,wrong:0,total:0};
+    map[key].correct+=s.correct||0;map[key].wrong+=s.wrong||0;map[key].total+=s.total||0;map[key].ts=Math.max(map[key].ts,s.ts||0);
+  });
+  return Object.values(map).map(g=>({...g,pct:g.total?Math.round(g.correct/g.total*100):0})).sort((a,b)=>(a.ts||0)-(b.ts||0));
+}
+function shortDate(d){const p=String(d).replace(/\s/g,'').replace(/\.$/,'').split('.');return p.length>=3?p[1]+'/'+p[2]:d;}
+function renderRecord(){renderStat();renderChart();renderHis();}
+function renderStat(){
+  const groups=groupedSessions();
+  const tot=sessions.reduce((a,s)=>a+(s.total||0),0);
+  const cor=sessions.reduce((a,s)=>a+(s.correct||0),0);
+  const avg=tot?Math.round(cor/tot*100):0;
+  G('statRow').innerHTML='<div class="sbox"><div class="sbox-n">'+groups.length+'</div><div class="sbox-l">합산 기록</div></div><div class="sbox"><div class="sbox-n">'+tot+'</div><div class="sbox-l">총 문제</div></div><div class="sbox"><div class="sbox-n">'+avg+'%</div><div class="sbox-l">평균</div></div>';
+}
+function renderChart(){
+  if(chartInst){chartInst.destroy();chartInst=null;}
+  const groups=groupedSessions();
+  if(!groups.length)return;
+  const dates=[...new Set(groups.map(s=>s.date))].slice(-30);
+  const modeInfo={right:{name:'우측',color:'#2F80ED'},left:{name:'좌측',color:'#0F7B3A'},both:{name:'양쪽',color:'#F2994A'}};
+  const datasets=Object.keys(modeInfo).map(m=>({
+    label:modeInfo[m].name,
+    data:dates.map(d=>{const arr=groups.filter(s=>s.date===d&&s.mode===m);if(!arr.length)return null;const t=arr.reduce((a,s)=>a+s.total,0),c=arr.reduce((a,s)=>a+s.correct,0);return t?Math.round(c/t*100):null;}),
+    borderColor:modeInfo[m].color,backgroundColor:modeInfo[m].color+'22',pointBackgroundColor:modeInfo[m].color,pointRadius:5,tension:.35,spanGaps:true,borderWidth:2
+  }));
+  chartInst=new Chart(G('mainChart'),{type:'line',data:{labels:dates.map(shortDate),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{usePointStyle:true,boxWidth:8,font:{size:11}}}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'rgba(25,45,28,.06)'}},x:{ticks:{maxRotation:45,font:{size:10},autoSkip:false},grid:{display:false}}}}});
+}
+function renderHis(){
+  const el=G('hisList');
+  const groups=groupedSessions();
+  if(!groups.length){el.innerHTML='<div class="empty">📊 아직 기록이 없어요<br>훈련 후 저장하면 기록돼요</div>';return;}
+  const ml={right:'우측',left:'좌측',both:'양쪽'},mb={right:'b-r',left:'b-l',both:'b-b'};
+  el.innerHTML=groups.slice().reverse().slice(0,40).map(s=>'<div class="his-item"><span class="badge '+(mb[s.mode]||'b-r')+'">'+(ml[s.mode]||s.mode)+'</span><span class="badge b-s">'+(s.stageLabel||s.stage)+'</span><div class="his-meta">'+s.date+' · 같은 날 합산</div><div><div class="his-pct">'+s.pct+'%</div><div class="his-cnt">'+s.correct+'/'+s.total+'</div></div></div>').join('');
+}
+function doCSV(){
+  if(!sessions.length){alert('내보낼 기록이 없어요!');return;}
+  const ml={right:'우측',left:'좌측',both:'양쪽'};
+  const h='날짜,귀,단계,맞음,틀림,총,정답률(%)';
+  const rows=sessions.map(s=>[s.date,ml[s.mode]||s.mode,s.stageLabel||s.stage,s.correct,s.wrong,s.total,s.pct].join(','));
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+[h,...rows].join('\n'));
+  a.download='청각재활기록_'+new Date().toLocaleDateString('ko-KR').replace(/[\s.]/g,'')+'.csv';a.click();
+}
+
+/* ══ 단어목록 ══ */
+function renderWL(){
+  document.querySelectorAll('#wEarGrid .ear-btn').forEach(b=>{b.className='ear-btn'+(b.dataset.m===wt?(wt==='right'?' on-r':wt==='left'?' on-l':' on-b'):'');});
+  G('wStageRow').innerHTML=STAGES.map(s=>'<button class="s-pill'+(s.key===ws?' on':'')+'" onclick="setWS(\''+s.key+'\')">'+s.label+'</button>').join('');
+  const ml={right:'우측',left:'좌측',both:'양쪽'};
+  G('wTitle').textContent=ml[wt]+' · '+(STAGES.find(s=>s.key===ws)||{label:ws}).label+' 추가 단어';
+  G('wArea').value=((userWords[wt]&&userWords[wt][ws])||[]).map(w=>String(w).replace(/\|/g,'/')).join('\n');
+}
+function setWT(t){wt=t;document.querySelectorAll('#wEarGrid .ear-btn').forEach(b=>{b.className='ear-btn'+(b.dataset.m===t?(t==='right'?' on-r':t==='left'?' on-l':' on-b'):'');});renderWL();}
+function setWS(s){ws=s;renderWL();}
+function saveWL(){
+  if(!userWords[wt])userWords[wt]={};
+  userWords[wt][ws]=G('wArea').value.split('\n').map(w=>w.trim().replace(/\|/g,'/')).filter(Boolean);
+  sv('ciW6',userWords);
+  const btn=G('saveWLBtn');btn.textContent='✓ 저장됨';btn.disabled=true;
+  setTimeout(()=>{btn.textContent='저장';btn.disabled=false;},1500);
+}
+
+/* ══ 초기화 ══ */
+applyCfg();
+renderStageRow();
+renderPDots();
+loadWord();
+</script>
+</body>
+</html>
