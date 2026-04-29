@@ -122,7 +122,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Pretendard','Na
 /* ── VS chips ── */
 .vs-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
 .vs-chip{padding:12px 26px;background:#fff;border:1.5px solid var(--sand);border-radius:var(--pill);font-size:20px;font-weight:900;color:var(--dark);cursor:pointer;transition:all .16s;box-shadow:var(--shadow-sm)}
-.vs-chip:hover{border-color:var(--teal);background:var(--teal2)}
+@media (hover:hover) and (pointer:fine){.vs-chip:hover{border-color:var(--teal);background:var(--teal2)}}
+.vs-chip:focus{outline:none}
+.vs-chip.clean{background:#fff!important;border-color:var(--sand)!important;color:var(--dark)!important}
 .vs-chip.ok{background:var(--green2);border-color:var(--green);color:var(--green3)}
 .vs-chip.ng{background:var(--red2);border-color:var(--red);color:var(--red3)}
 .vs-chip.ans{background:var(--beige);border-color:var(--sand);color:var(--sub)}
@@ -718,6 +720,7 @@ function setStage(s){
 
 /* ══ 단어 로드 ══ */
 function loadWord(){
+  resetVsChips(true);
   curWord='';curPair=null;scored=false;
   const m=G('wMain');
   m.textContent='—';
@@ -765,8 +768,23 @@ function pickWord(){
   return{word:raw,pair:null};
 }
 
+/* ══ VS 버튼 상태 초기화 ══ */
+function resetVsChips(clearHtml=false){
+  const row=G('vsRow');
+  document.querySelectorAll('.vs-chip').forEach(c=>{
+    c.className='vs-chip';
+    c.style.pointerEvents='';
+    c.blur&&c.blur();
+  });
+  if(row){
+    if(clearHtml) row.innerHTML='';
+    row.style.display=clearHtml?'none':row.style.display;
+  }
+}
+
 /* ══ 다음 단어 — 항상 블러로 시작 ══ */
 function nextWord(){
+  resetVsChips(true);
   const p=pickWord();
   if(!p){alert('단어가 없어요!');return;}
   curWord=p.word;curPair=p.pair;scored=false;
@@ -814,20 +832,23 @@ function pulseWordBox(){const box=G("wordBox");if(!box)return;box.classList.remo
 /* ══ 칩 탭 ══ */
 function tapChip(e,el){
   e.stopPropagation();
-  if(!curWord)return;
+  if(!curWord||scored)return;
   const ok=el.dataset.w===curWord;
   softHaptic(ok?"good":"bad"); tone(ok?"good":"bad");
   document.querySelectorAll('.vs-chip').forEach(c=>{
     c.className='vs-chip'+(c.dataset.w===curWord?' ans':'');
+    c.style.pointerEvents='none';
+    c.blur&&c.blur();
   });
   el.className='vs-chip '+(ok?'ok':'ng');
+  el.blur&&el.blur();
   G('wMain').classList.add('show');G('wTap').classList.add('hide');
   if(!scored){
     if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}
     total++;sTotal++;scored=true;
     updateScore();checkAdv();updateWeak();
   }
-  setTimeout(nextWord,1100);
+  setTimeout(()=>{ resetVsChips(true); nextWord(); },900);
 }
 
 /* ══ 단어박스 탭 — 정답 보기/숨기기 ══ */
