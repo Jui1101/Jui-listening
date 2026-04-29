@@ -785,6 +785,10 @@ function nextWord(){
       (i>0?'<span class="vs-sep">/</span>':'')+
       '<span class="vs-chip" data-w="'+w+'" onclick="tapChip(event,this)">'+w+'</span>'
     ).join('');
+
+    document.querySelectorAll('.vs-chip').forEach(c=>{
+  c.className='vs-chip';
+});
     G('wBoxHint').textContent='둘 중 하나가 재생됐어요';
   }else{
     G('vsRow').style.display='none';
