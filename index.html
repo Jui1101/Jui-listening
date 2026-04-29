@@ -148,13 +148,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Pretendard','Na
 .vs-chip.ok{animation:popGood .32s cubic-bezier(.2,1.4,.3,1)}
 .vs-chip.ng{animation:shakeBad .34s ease both}
 .btn-save.saved{animation:saveFlash .55s ease both}
- panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
- cardIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
- listenPulse{0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}}
- popGood{0%{transform:scale(.96)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
- shakeBad{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(5px)}75%{transform:translateX(-2px)}}
- saveFlash{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
- (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes listenPulse{0%{transform:scale(1)}45%{transform:scale(1.018)}100%{transform:scale(1)}}
+@keyframes popGood{0%{transform:scale(.96)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shakeBad{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}55%{transform:translateX(5px)}75%{transform:translateX(-2px)}}
+@keyframes saveFlash{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
 /* ── Score ── */
 .score-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
@@ -723,7 +723,7 @@ function loadWord(){
   G('wTap').classList.remove('hide');
   G('typeInp').value='';G('typeRes').textContent='';G('typeRes').className='type-res';
   G('spRes').textContent='버튼 누르고 따라 말해봐';G('spRes').className='sp-res';
-  if(G('mainNextBtn'))G('mainNextBtn').textContent='▶ 시작';
+  if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 시작';G('mainNextBtn').className='btn btn-start';}
 }
 
 /* ══ VS 쌍 중복 제거 ══ */
@@ -779,27 +779,28 @@ function nextWord(){
   G('spRes').textContent='버튼 누르고 따라 말해봐';G('spRes').className='sp-res';
 
   const isVS=trainMode==='vs'&&stage!=='sent';
+  let hintText='단어를 들어봐';
   if(p.pair&&isVS){
     G('vsRow').style.display='flex';
     G('vsRow').innerHTML=p.pair.map((w,i)=>
       (i>0?'<span class="vs-sep">/</span>':'')+
       '<span class="vs-chip" data-w="'+w+'" onclick="tapChip(event,this)">'+w+'</span>'
     ).join('');
-
-    document.querySelectorAll('.vs-chip').forEach(c=>{
-  c.className='vs-chip';
-});
-    G('wBoxHint').textContent='둘 중 하나가 재생됐어요';
+    // 새 문제마다 이전 선택 색상/정답 표시를 완전히 초기화
+    document.querySelectorAll('.vs-chip').forEach(c=>{c.className='vs-chip';});
+    hintText='둘 중 하나가 재생됐어요';
   }else{
     G('vsRow').style.display='none';
-    G('wBoxHint').textContent=stage==='sent'?'문장을 들어봐':'단어를 들어봐';
+    hintText=stage==='sent'?'문장을 들어봐':'단어를 들어봐';
   }
-  if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 다음';G('mainNextBtn').className='btn btn-next';}
-  G('wBoxHint').textContent='둘 중 하나가 재생됐어요';
 
-setTimeout(()=>{
-  speak(curWord);
-}, 150);
+  if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 다음';G('mainNextBtn').className='btn btn-next';}
+
+  // iPhone Safari에서 음성 재생이 UI 반영을 막는 경우가 있어, 힌트/칩을 먼저 그린 뒤 재생한다.
+  G('wBoxHint').textContent=hintText;
+  requestAnimationFrame(()=>{
+    setTimeout(()=>{ speak(curWord); }, 180);
+  });
 }
 
 function softHaptic(kind){try{if(navigator.vibrate){navigator.vibrate(kind==="bad"?[18,35,18]:12);}}catch(e){}}
@@ -834,7 +835,12 @@ function revealAns(){
   G('wTap').classList.toggle('hide',!showing);
 }
 
-function playCurrent(){if(curWord)speak(curWord);}
+function playCurrent(){
+  if(!curWord)return;
+  const isVS=trainMode==='vs'&&stage!=='sent'&&curPair;
+  G('wBoxHint').textContent=isVS?'둘 중 하나가 재생됐어요':(stage==='sent'?'문장을 다시 들어봐':'단어를 다시 들어봐');
+  requestAnimationFrame(()=>{ setTimeout(()=>{ speak(curWord); }, 80); });
+}
 
 /* ══ 직접 입력 ══ */
 function typeCheck(){
