@@ -795,7 +795,11 @@ function nextWord(){
     G('wBoxHint').textContent=stage==='sent'?'문장을 들어봐':'단어를 들어봐';
   }
   if(G('mainNextBtn')){G('mainNextBtn').textContent='▶ 다음';G('mainNextBtn').className='btn btn-next';}
+  G('wBoxHint').textContent='둘 중 하나가 재생됐어요';
+
+setTimeout(()=>{
   speak(curWord);
+}, 150);
 }
 
 function softHaptic(kind){try{if(navigator.vibrate){navigator.vibrate(kind==="bad"?[18,35,18]:12);}}catch(e){}}
