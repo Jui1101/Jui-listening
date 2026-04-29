@@ -723,7 +723,7 @@ function loadWord(){
   m.textContent='—';
   m.classList.remove('show'); // 블러 상태로 리셋
   G('vsRow').style.display='none';
-  G('wBoxHint').textContent='단어를 재생해봐';
+  G('wBoxHint').textContent='단어를 재생해보세요.';
   G('wTap').classList.remove('hide');
   G('typeInp').value='';G('typeRes').textContent='';G('typeRes').className='type-res';
   G('spRes').textContent='버튼 누르고 따라 말해봐';G('spRes').className='sp-res';
@@ -792,7 +792,7 @@ function nextWord(){
     ).join('');
     // 새 문제마다 이전 선택 색상/정답 표시를 완전히 초기화
     document.querySelectorAll('.vs-chip').forEach(c=>{c.className='vs-chip';});
-    hintText='둘 중 하나가 재생됐어요';
+    hintText='둘 중 하나가 재생됐습니다.';
   }else{
     G('vsRow').style.display='none';
     hintText=stage==='sent'?'문장을 들어봐':'단어를 들어봐';
@@ -842,7 +842,7 @@ function revealAns(){
 function playCurrent(){
   if(!curWord)return;
   const isVS=trainMode==='vs'&&stage!=='sent'&&curPair;
-  G('wBoxHint').textContent=isVS?'둘 중 하나가 재생됐어요':(stage==='sent'?'문장을 다시 들어봐':'단어를 다시 들어봐');
+  G('wBoxHint').textContent=isVS?'둘 중 하나가 재생됐습니다.':(stage==='sent'?'문장을 다시 들어봐':'단어를 다시 들어봐');
   requestAnimationFrame(()=>{ setTimeout(()=>{ speak(curWord); }, 80); });
 }
 
