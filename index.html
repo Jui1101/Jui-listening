@@ -528,6 +528,40 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px;
 .his-pct { font-size: 15px; font-weight: 900; color: var(--text); }
 .his-cnt { font-size: 11px; font-weight: 700; color: var(--text3); }
 .empty { text-align: center; color: var(--text3); padding: 28px 0; font-size: 14px; font-weight: 700; }
+.his-edit-btn {
+  font-size: 13px; color: var(--text3); background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 5px 9px; cursor: pointer; flex: none; font-weight: 700;
+  transition: all .15s;
+}
+.his-edit-btn:active { border-color: var(--mint); color: var(--mint); }
+
+/* 기록 수정 모달 */
+#editRecModal {
+  display: none; position: fixed; inset: 0; z-index: 997;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+  align-items: flex-end; justify-content: center; padding: 0;
+}
+#editRecModal.on { display: flex; }
+.edit-rec-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 24px 24px 0 0; padding: 24px 20px 40px;
+  width: 100%; max-width: 540px;
+}
+.edit-rec-title { font-size: 17px; font-weight: 900; color: var(--text); margin-bottom: 4px; }
+.edit-rec-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+.edit-ear-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px;
+}
+.edit-ear-btn {
+  padding: 14px 8px; border: 1.5px solid var(--border2);
+  border-radius: var(--rads); background: var(--bg3);
+  font-family: inherit; font-size: 13px; font-weight: 800;
+  color: var(--text2); cursor: pointer; text-align: center; transition: all .15s;
+}
+.edit-ear-btn.sel-r { background: var(--blue-dim)!important; border-color: var(--blue)!important; color: #2563eb!important; }
+.edit-ear-btn.sel-l { background: var(--mint-dim)!important; border-color: var(--mint)!important; color: #0b7f68!important; }
+.edit-ear-btn.sel-b { background: var(--purple-dim)!important; border-color: var(--purple)!important; color: #6d5bd0!important; }
 
 /* 설정 */
 .set-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); }
@@ -685,6 +719,21 @@ html,body{background:linear-gradient(180deg,#fbfdff 0%,#f6f9fc 100%)!important;c
   </div>
 </div>
 
+<!-- 기록 수정 모달 -->
+<div id="editRecModal">
+  <div class="edit-rec-card">
+    <div class="edit-rec-title">✏️ 기록 수정</div>
+    <div class="edit-rec-sub" id="editRecSub">어느 귀로 변경할까요?</div>
+    <div class="edit-ear-grid">
+      <button class="edit-ear-btn" id="editBtnRight" onclick="selEditEar('right')">👂<br>우측</button>
+      <button class="edit-ear-btn" id="editBtnLeft"  onclick="selEditEar('left')">👂<br>좌측</button>
+      <button class="edit-ear-btn" id="editBtnBoth"  onclick="selEditEar('both')">🎧<br>양이</button>
+    </div>
+    <button class="ob-btn" onclick="applyEditRec()">변경 저장</button>
+    <button class="ob-btn-ghost" onclick="closeEditRecModal()">취소</button>
+  </div>
+</div>
+
 <!-- 카카오 경고 -->
 <div id="kakaoWarn">
   <div class="kakao-card">
@@ -752,7 +801,7 @@ html,body{background:linear-gradient(180deg,#fbfdff 0%,#f6f9fc 100%)!important;c
     <div class="ear-grid" id="earGrid">
       <button class="ear-btn on-r" data-m="right" onclick="setMode('right')"><span class="ico">👂</span>우측</button>
       <button class="ear-btn" data-m="left" onclick="setMode('left')"><span class="ico">👂</span>좌측</button>
-      <button class="ear-btn" data-m="both" onclick="setMode('both')"><span class="ico">🎧</span>양쪽</button>
+      <button class="ear-btn" data-m="both" onclick="setMode('both')"><span class="ico">🎧</span>양이</button>
     </div>
     <div class="lbl stage-title">단계 <span class="level-pill-inline" id="stageLvPill">Lv.1</span></div>
     <div class="stage-row" id="stageRow"></div>
@@ -839,7 +888,7 @@ html,body{background:linear-gradient(180deg,#fbfdff 0%,#f6f9fc 100%)!important;c
     <div class="lbl">정답률 추이</div>
     <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
     <div style="display:flex;gap:12px;margin-top:8px;font-size:11px;font-weight:700">
-      <span style="color:#5b9cf6">● 우측</span><span style="color:#4ecca3">● 좌측</span><span style="color:#a78bfa">● 양쪽</span>
+      <span style="color:#5b9cf6">● 우측</span><span style="color:#4ecca3">● 좌측</span><span style="color:#a78bfa">● 양이</span>
     </div>
   </div>
   <div class="card">
@@ -911,7 +960,7 @@ html,body{background:linear-gradient(180deg,#fbfdff 0%,#f6f9fc 100%)!important;c
     <div class="ear-grid" id="wEarGrid">
       <button class="ear-btn on-r" data-m="right" onclick="setWT('right')"><span class="ico">👂</span>우측</button>
       <button class="ear-btn" data-m="left" onclick="setWT('left')"><span class="ico">👂</span>좌측</button>
-      <button class="ear-btn" data-m="both" onclick="setWT('both')"><span class="ico">🎧</span>양쪽</button>
+      <button class="ear-btn" data-m="both" onclick="setWT('both')"><span class="ico">🎧</span>양이</button>
     </div>
     <div class="lbl">단계</div>
     <div class="stage-row" id="wStageRow"></div>
@@ -997,57 +1046,67 @@ const WORD_DATA = {
   sent_lv1: {   // 아주 짧고 단순한 일상 표현
     right: ['물 주세요','밥 먹었어요','고마워요','미안해요','잠깐만요','어디 가요','배 고파요','피곤해요','집에 가요','잘 모르겠어요','알겠어요','다시 말해줘요','천천히 말해줘요','화장실 어디예요','이거 얼마예요','시간 있어요','먼저 갈게요','뭐 먹을까요','오늘 날씨 좋아요','잠깐요 잘 안 들려요','조금 더 크게 말해주세요','다시 한번 말해줄 수 있어요'],
     left: ['물 주세요','밥 먹었어요','고마워요','미안해요','잠깐만요','어디 가요','배 고파요','피곤해요','집에 가요','잘 모르겠어요','알겠어요','다시 말해줘요','천천히 말해줘요','화장실 어디예요','이거 얼마예요','시간 있어요','먼저 갈게요','뭐 먹을까요','오늘 날씨 좋아요','조금 더 크게 말해주세요','다시 한번 말해줄 수 있어요'],
-    both: ['물 주세요','밥 먹었어요','고마워요','미안해요','잠깐만요','어디 가요','배 고파요','피곤해요','집에 가요','알겠어요','다시 말해줘요','천천히 말해줘요','화장실 어디예요','먼저 갈게요','오늘 날씨 좋아요','다시 한번 말해줄 수 있어요'],
+    // 양이: lv1보다 한 단계 긴 문장 (lv2 수준)
+    both: ['우리집 현관 앞에 두세요','올해 계획을 세웠습니다','오랜만에 외출을 했어요','정말로 빵집에 다녀왔어요','저는 매일 일기를 써요','강아지 산책시키고 왔어요','결과가 좋아서 다행입니다','생일을 진심으로 축하합니다','의자가 딱딱해서 불편해요','시간이 꽤 흐른 것 같아요','서로 조심하는게 좋겠다','누구랑 만나고 왔어요','김치가 쉬어서 맛이 없다','왜 자꾸 시계를 봐요','이제는 아무도 없다'],
   },
   sent_lv2: {   // 짧은 일상 대화
     right: ['저희 아버지가 하시는 가게입니다','그대로 바꾸지 않았습니다','여기는 어떤 사람들이 오나요','우리집 현관 앞에 두세요','김치가 쉬어서 맛이 없다','올해 계획을 세웠습니다','재료가 다 떨어졌습니다','오랜만에 외출을 했어요','누구랑 만나고 왔어요','서로 조심하는게 좋겠다','일찍 다녀야지','우리집은 도로 옆에 있다','햇빛 때문에 눈을 못 뜨겠다','정말로 빵집에 다녀왔어요','그냥 이것저것 사왔습니다','지금은 생각이 안납니다','저는 매일 일기를 써요','왜 자꾸 시계를 봐요','의자가 딱딱해서 불편해요','이제는 아무도 없다','시간이 꽤 흐른 것 같아요','강아지 산책시키고 왔어요','결과가 좋아서 다행입니다','예약을 변경해주세요','생일을 진심으로 축하합니다'],
     left: ['저희 아버지가 하시는 가게입니다','그대로 바꾸지 않았습니다','여기는 어떤 사람들이 오나요','우리집 현관 앞에 두세요','김치가 쉬어서 맛이 없다','올해 계획을 세웠습니다','오랜만에 외출을 했어요','누구랑 만나고 왔어요','서로 조심하는게 좋겠다','우리집은 도로 옆에 있다','정말로 빵집에 다녀왔어요','저는 매일 일기를 써요','의자가 딱딱해서 불편해요','시간이 꽤 흐른 것 같아요','강아지 산책시키고 왔어요','결과가 좋아서 다행입니다','예약을 변경해주세요','생일을 진심으로 축하합니다'],
-    both: ['우리집 현관 앞에 두세요','올해 계획을 세웠습니다','오랜만에 외출을 했어요','누구랑 만나고 왔어요','정말로 빵집에 다녀왔어요','저는 매일 일기를 써요','강아지 산책시키고 왔어요','결과가 좋아서 다행입니다','생일을 진심으로 축하합니다'],
+    // 양이: lv3 수준 문장
+    both: ['컴퓨터는 잘 다룰 줄 아시나요','엘리베이터가 갑자기 정지했어요','아이들이 놀이터에서 놀고있네요','냉동실에 맛있는 아이스크림 있어요','핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','깜짝 놀라서 벌떡 일어났다','너무 늦어서 오늘은 안됩니다','위험하니까 뒤로 물러나세요','오늘 저녁은 치킨을 시켰다','주차할 곳이 없어서 헤맸어요','목이랑 머리가 아픕니다','버튼 두개를 같이 눌러보세요','제가 몇번이나 전화를 드렸어요','꼭 그렇게 해야 하나요'],
   },
   sent_lv3: {   // 조금 더 복잡한 문장
     right: ['컴퓨터는 잘 다룰 줄 아시나요','손가락을 움직일 수가 없어요','버튼 두개를 같이 눌러보세요','엘리베이터가 갑자기 정지했어요','주차할 곳이 없어서 헤맸어요','제가 예상한 것보다 잘 맞는다','오토바이가 쌩하고 지나갔다','햇빛 때문에 눈을 못 뜨겠다','너무 늦어서 오늘은 안됩니다','아이들이 놀이터에서 놀고있네요','냉동실에 맛있는 아이스크림 있어요','위험하니까 뒤로 물러나세요','규칙을 잘 지켜야 한다','핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','더워서 잠을 잘 못잤어요','깜짝 놀라서 벌떡 일어났다','제가 몇번이나 전화를 드렸어요','입맛이 별로 없네요','방금 생각이 났어요','목이랑 머리가 아픕니다','시간이 걸려도 괜찮아요','금요일이 제일 좋다','오늘 저녁은 치킨을 시켰다','꼭 그렇게 해야 하나요'],
     left: ['컴퓨터는 잘 다룰 줄 아시나요','손가락을 움직일 수가 없어요','엘리베이터가 갑자기 정지했어요','주차할 곳이 없어서 헤맸어요','오토바이가 쌩하고 지나갔다','너무 늦어서 오늘은 안됩니다','아이들이 놀이터에서 놀고있네요','냉동실에 맛있는 아이스크림 있어요','위험하니까 뒤로 물러나세요','핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','깜짝 놀라서 벌떡 일어났다','방금 생각이 났어요','목이랑 머리가 아픕니다','시간이 걸려도 괜찮아요','오늘 저녁은 치킨을 시켰다'],
-    both: ['엘리베이터가 갑자기 정지했어요','아이들이 놀이터에서 놀고있네요','냉동실에 맛있는 아이스크림 있어요','핸드폰은 진동 모드로 바꿔주세요','하루종일 걸어다녀서 힘들어요','목이랑 머리가 아픕니다'],
+    // 양이: lv4~lv5 수준 긴 문장
+    both: ['바빠서 정신이 없었어요','편하게 쉬다가 가세요','생각보다 훨씬 어렵네요','조금만 더 천천히 말씀해 주시겠어요','문을 잠그고 나왔는지 모르겠어요','냉장고에 넣어두면 괜찮을 거예요','어제 뭐 드셨는지 기억나세요','오늘따라 유독 힘들게 느껴져요','이렇게 하면 안 될 것 같아요','여기서 기다리면 올 것 같아요','이건 꼭 지키고 오셔야해요','그 사람 보면 전화해주세요','나중에 다시 이야기해요'],
   },
   sent_lv4: {   // 더 길고 복잡한 문장
     right: ['우리는 서로 그런 말이 아닙니다','TV 광고에서 봤어요','바빠서 정신이 없었어요','혼자 열심히 했어요','편하게 쉬다가 가세요','이건 꼭 지키고 오셔야해요','끝나고 바로 오세요','시간 좀 내주세요','서로 조심하는게 좋겠다','그 사람 보면 전화해주세요','생각보다 훨씬 어렵네요','이렇게 하면 안 될 것 같아요','나중에 다시 이야기해요','오늘따라 유독 힘들게 느껴져요','제 말이 잘 들리세요','조금만 더 천천히 말씀해 주시겠어요','여기서 기다리면 올 것 같아요','문을 잠그고 나왔는지 모르겠어요','냉장고에 넣어두면 괜찮을 거예요','어제 뭐 드셨는지 기억나세요'],
     left: ['우리는 서로 그런 말이 아닙니다','바빠서 정신이 없었어요','혼자 열심히 했어요','편하게 쉬다가 가세요','이건 꼭 지키고 오셔야해요','시간 좀 내주세요','생각보다 훨씬 어렵네요','이렇게 하면 안 될 것 같아요','오늘따라 유독 힘들게 느껴져요','제 말이 잘 들리세요','조금만 더 천천히 말씀해 주시겠어요','문을 잠그고 나왔는지 모르겠어요','냉장고에 넣어두면 괜찮을 거예요','어제 뭐 드셨는지 기억나세요'],
-    both: ['바빠서 정신이 없었어요','편하게 쉬다가 가세요','생각보다 훨씬 어렵네요','제 말이 잘 들리세요','조금만 더 천천히 말씀해 주시겠어요','어제 뭐 드셨는지 기억나세요'],
+    // 양이: lv5 긴 문장
+    both: ['올해 계획을 미리 세워두면 나중에 훨씬 편해요','이번 주 안에 꼭 마무리해야 하는 일이 있어요','날씨가 갑자기 흐려지더니 소나기가 쏟아졌어요','그 사람이 무슨 말을 하는지 도통 모르겠어요','이 서류는 내일까지 제출해야 한다고 들었어요','어디서 그 소리가 나는지 도무지 찾을 수가 없어요','아파트 공사 소리 때문에 밤에 잠을 못 잤어요','오늘 아침에 출근하다가 지갑을 두고 온 것 같아요','지하철이 갑자기 멈춰서 한참을 기다렸어요','전화 연결이 자꾸 끊겨서 내용을 놓쳤어요','재활 훈련을 꾸준히 하니까 조금씩 나아지는 것 같아요','시끄러운 곳에서는 아직도 말소리 구분이 어려워요'],
   },
   sent_lv5: {   // 길고 복잡한 문장, 어려운 어휘
     right: ['올해 계획을 미리 세워두면 나중에 훨씬 편해요','이번 주 안에 꼭 마무리해야 하는 일이 있어요','날씨가 갑자기 흐려지더니 소나기가 쏟아졌어요','그 사람이 무슨 말을 하는지 도통 모르겠어요','회의 시간이 자꾸 바뀌어서 헷갈리기 시작했어요','이 서류는 내일까지 제출해야 한다고 들었어요','어디서 그 소리가 나는지 도무지 찾을 수가 없어요','아파트 공사 소리 때문에 밤에 잠을 못 잤어요','오늘 아침에 출근하다가 지갑을 두고 온 것 같아요','다음 주까지 확인하고 결과를 알려주시면 감사하겠습니다','지하철이 갑자기 멈춰서 한참을 기다렸어요','전화 연결이 자꾸 끊겨서 내용을 놓쳤어요','보청기를 새로 맞추고 나서 소리가 훨씬 잘 들려요','재활 훈련을 꾸준히 하니까 조금씩 나아지는 것 같아요','시끄러운 곳에서는 아직도 말소리 구분이 어려워요'],
     left: ['올해 계획을 미리 세워두면 나중에 훨씬 편해요','이번 주 안에 꼭 마무리해야 하는 일이 있어요','날씨가 갑자기 흐려지더니 소나기가 쏟아졌어요','그 사람이 무슨 말을 하는지 도통 모르겠어요','이 서류는 내일까지 제출해야 한다고 들었어요','어디서 그 소리가 나는지 도무지 찾을 수가 없어요','아파트 공사 소리 때문에 밤에 잠을 못 잤어요','오늘 아침에 출근하다가 지갑을 두고 온 것 같아요','지하철이 갑자기 멈춰서 한참을 기다렸어요','전화 연결이 자꾸 끊겨서 내용을 놓쳤어요','재활 훈련을 꾸준히 하니까 조금씩 나아지는 것 같아요','시끄러운 곳에서는 아직도 말소리 구분이 어려워요'],
-    both: ['이번 주 안에 꼭 마무리해야 하는 일이 있어요','날씨가 갑자기 흐려지더니 소나기가 쏟아졌어요','어디서 그 소리가 나는지 도무지 찾을 수가 없어요','지하철이 갑자기 멈춰서 한참을 기다렸어요','재활 훈련을 꾸준히 하니까 조금씩 나아지는 것 같아요','시끄러운 곳에서는 아직도 말소리 구분이 어려워요'],
+    // 양이: 가장 길고 복잡한 문장, 2문장 이어붙이기 수준
+    both: ['다음 주까지 확인하고 결과를 알려주시면 감사하겠습니다','회의 시간이 자꾸 바뀌어서 헷갈리기 시작했어요','보청기를 새로 맞추고 나서 소리가 훨씬 잘 들려요','아파트 공사 소리 때문에 밤에 잠을 못 잤어요','오늘 아침에 출근하다가 지갑을 두고 온 것 같아요','전화 연결이 자꾸 끊겨서 내용을 놓쳤어요','재활 훈련을 꾸준히 하니까 조금씩 나아지는 것 같아요','시끄러운 곳에서는 아직도 말소리 구분이 어려워요','어디서 그 소리가 나는지 도무지 찾을 수가 없어요','이번 주 안에 꼭 마무리해야 하는 일이 있어요','날씨가 갑자기 흐려지더니 소나기가 쏟아졌어요','그 사람이 무슨 말을 하는지 도통 모르겠어요','이 서류는 내일까지 제출해야 한다고 들었어요','올해 계획을 미리 세워두면 나중에 훨씬 편해요'],
   },
 
   // ─── 친숙 2음절 레벨별 ───
   fam2_lv1: {  // 매우 친숙하고 차이가 큰 단어쌍
     right: ['가방/나방','고기/보기','날씨/달씨','다리/바리','마음/바음','머리/버리','발목/말목','사람/자람','소리/초리','시간/지간'],
     left:  ['가방/나방','고기/보기','날씨/달씨','다리/바리','마음/바음','머리/버리','발목/말목','사람/자람','소리/초리','시간/지간'],
-    both:  ['가방/나방','고기/보기','날씨/달씨','마음/바음','소리/초리','시간/지간'],
+    // 양이: lv2 수준 쌍 (더 헷갈리는 것들)
+    both:  ['사랑/사람','수박/주박','소금/초금','신경/진경','대답/대박','나무/다무','소리/초리','가방/나방','날씨/달씨','마음/바음','고기/보기','시간/지간'],
   },
   fam2_lv2: {  // 친숙하지만 조금 더 비슷한 쌍
     right: ['가게/나게','가구/나구','가방/나방','가을/나을','간단/만단','감기/남기','감자/남자','건강/넌강','겨울/녀울','결과/별과','결정/별정','경고/정고','경기/정기','계단/제단','고기/보기','고민/보민','공부/봉부','나무/다무','날씨/달씨','남자/담자','내년/대년','내용/대용','내일/대일','다리/바리','다음/바음','도로/모로','마음/바음','머리/버리','메모/베모','무리/부리','발표/말표','방금/망금','사고/자고','사람/자람','사실/자실','생각/쟁각','서울/저울','소금/초금','소리/초리','수리/주리','수박/주박','시간/지간','시계/지계','식당/직당','신경/진경','신발/진발','사랑/사람','대답/대박','발목/탈모'],
     left:  ['나비/마비','노래/모래','너무/머무','내일/매일','나라/마라','나무/마무','가게/나게','가방/나방','가을/나을','감기/남기','겨울/녀울','결정/별정','경고/정고','고기/보기','날씨/달씨','남자/담자','내년/대년','다리/바리','도로/모로','마음/바음','머리/버리','사람/자람','사실/자실','생각/쟁각','서울/저울','소리/초리','수리/주리','수박/주박','시간/지간','식당/직당','신경/진경','사랑/사람','대답/대박','발목/탈모'],
-    both:  ['사랑/사람','사유/사용','수박/주박','소금/초금','신경/진경','대답/대박','소리/초리','가방/나방','나무/다무','고기/보기','날씨/달씨','마음/바음'],
+    // 양이: unfam2 수준 비친숙 쌍
+    both:  ['머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','오리/오루','소리/수리','가치/가시','기기/구구','자료/차료'],
   },
   // ─── 비친숙 2음절 (레벨 3+) ───
   unfam2: {
     right: ['머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리','갈라/발라','개시/배시','기로/비로','오리/오루','리리/루루','아리/아루','야기/야구','마디/마드','가디/가드','비시/비수','기기/구구','시기/시구','미디/미두','가리/가루','다기/다구','모기/모구','고요/교요','가요/강요','자료/차료','고개/고배','결심/결삼','어색/여색','온돌/온들','분말/불말','합격/합겨','날개/말개'],
     left:  ['머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','거리/버리','갈라/발라','개시/배시','기로/비로','노아/모아','소리/수리','조리/주리','가치/가시','나무/마무','오리/오루','리리/루루','야기/야구','비시/비수','기기/구구','시기/시구','미디/미두','자료/차료','고개/고배','결심/결삼','어색/여색','분말/불말','합격/합겨','날개/말개'],
-    both:  ['머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','오리/오루','소리/수리','가치/가시','기기/구구','자료/차료'],
+    // 양이: 가장 헷갈리는 쌍만 + 추가 어려운 쌍
+    both:  ['머리/모리','거리/고리','다리/두리','오리/우리','고리/구리','쉬어/쥐어','소개/조개','소금/조금','구어/기어','지어/주어','비어/부어','가지/바지','가요/자요','고요/보요','오리/오루','소리/수리','가치/가시','기기/구구','자료/차료','갈라/발라','개시/배시','기로/비로','리리/루루','아리/아루','야기/야구','비시/비수','시기/시구','미디/미두','고개/고배','결심/결삼','어색/여색','날개/말개'],
   },
   // ─── 친숙 1음절 ───
   fam1: {
     right: ['감','개','겁','곤','공','귀','굴','글','길','꽃','꿈','끈','끝','나','날','낮','너','눈','달','닭','독','돈','돌','땀','땅','떡','또','뜻','말','맛','멋','목','몸','문','물','밖','반','발','밤','밥','방','배','벌','벽','별','병','봄','분','불','비','빵','산','살','새','속','손','술','신','실','안','알','앞','약','역','열','옆','옷','운','일','입','잠','장','저','전','점','줄','쥐','집','차','창','책','칼','컵','코','탓','통','파','팔','표','풀','해','형','힘'],
     left:  ['감','개','겁','곤','공','귀','굴','글','길','꽃','꿈','끈','끝','나','날','낮','너','눈','달','닭','독','돈','돌','땀','땅','떡','또','뜻','말','맛','멋','목','몸','문','물','밖','반','발','밤','밥','방','배','벌','벽','별','병','봄','분','불','비','빵','산','살','새','속','손','술','신','실','안','알','앞','약','역','열','옆','옷','운','일','입','잠','장','저','전','점','줄','쥐','집','차','창','책','칼','컵','코','탓','통','파','팔','표','풀','해','형','힘'],
-    both:  ['감','개','나','날','눈','달','말','맛','몸','물','밥','손','일','집','책','코','팔','해','힘','꽃'],
+    // 양이: unfam1 수준 비친숙 단어로 교체
+    both:  ['캔','층','삼','을','당','식','뿔','죽','권','상','광','놀','단','빗','심','경','만','접','덕','갑','납','액','탑','극','핵','활','껌','샘','명','골','학','녹','즉','북','근','농','캡','궁','맵','와','짝','관','큐','털','동','평','성','걸','묵','건','합','선','황','객','침','색','솟','엄','원','봉','정','간','록','조','곡','쇠','줌','올','족','연','특','취','총','뼈','염','링','솔','놈','낼','법','움','견','치','룸','깐','답','적'],
   },
   // ─── 비친숙 1음절 (레벨 5) ───
   unfam1: {
     right: ['캔','층','삼','을','당','난','식','뿔','죽','권','상','광','놀','회','늦','생','단','빗','악','덜','심','경','만','의','접','덕','갑','줄','석','별','금','본','잘','초','납','액','탑','극','자','사','핵','교','활','운','먹','추','민','음','껌','샘','명','골','학','녹','즉','북','근','농','바','캡','면','궁','틈','맵','리','와','짝','관','큐','털','진','이','카','동','평','성','걸','보','묵','승','건','고','합','선','수','황','객','침','색','솟','엄','원','좌','봉','정','간','읍','록','팁','겁','조','곡','쇠','줌','올','족','연','모','특','취','총','뼈','다','염','링','솔','길','일','놈','낼','법','움','미','견','치','룸','깐','답','적'],
     left:  ['캔','층','삼','을','당','난','식','뿔','죽','권','상','광','놀','회','늦','생','단','빗','악','덜','심','경','만','의','접','덕','갑','줄','석','별','금','본','잘','초','납','액','탑','극','자','사','핵','교','활','운','먹','추','민','음','껌','샘','명','골','학','녹','즉','북','근','농','바','캡','면','궁','틈','맵','리','와','짝','관','큐','털','진','이','카','동','평','성','걸','보','묵','건','고','합','선','수','황','객','침','색','솟','엄','원','좌','봉','정','간','읍','록','팁','겁','조','곡','쇠','줌','올','족','연','모','특','취','총','뼈','다','염','링','솔','길','일','놈','낼','법','움','미','견','치','룸','깐','답','적'],
-    both:  ['캔','층','삼','을','당','식','뿔','죽','권','상','광','놀','단','빗','심','경','만','접','덕','갑'],
+    // 양이: 풀을 더 크게 + 어려운 것 위주
+    both:  ['캔','층','삼','을','당','식','뿔','죽','권','상','광','놀','단','빗','심','경','만','접','덕','갑','납','액','탑','극','핵','활','껌','샘','명','골','학','녹','즉','북','근','농','캡','면','궁','틈','맵','와','짝','관','큐','털','동','평','성','걸','묵','건','합','선','황','객','침','색','솟','엄','원','봉','정','간','읍','록','팁','겁','조','곡','쇠','줌','올','족','연','특','취','총','뼈','염','링','솔','놈','낼','법','움','견','치','룸','깐','답','적'],
   },
 };
 
@@ -1240,6 +1299,9 @@ function clickExistingNick(name, lv) {
 }
 
 function deleteNick(name) {
+  const pw = prompt('삭제 비밀번호를 입력하세요');
+  if(pw === null) return;
+  if(pw !== '5103') { alert('비밀번호가 틀렸어요!'); return; }
   if(!confirm('"'+name+'" 닉네임과 기록을 삭제할까요?')) return;
   const list = getNickList().filter(n=>n.name!==name);
   saveNickListLS(list);
@@ -1392,7 +1454,7 @@ function pickWord() {
   let raw, tries=0;
   do { raw = wl[Math.floor(Math.random()*wl.length)].trim(); tries++; }
   while(recentRaws.includes(raw) && tries<15);
-  recentRaws.push(raw); if(recentRaws.length>6) recentRaws.shift();
+  recentRaws.push(raw); if(recentRaws.length>20) recentRaws.shift();
   if(/[|/]/.test(raw)) {
     const parts = cleanPair(raw.split(/[|/]/));
     if(parts.length<2) return {word:parts[0]||raw,pair:null};
@@ -1528,8 +1590,15 @@ function loadVoices(){
   }
 }
 speechSynthesis.onvoiceschanged=loadVoices; setTimeout(loadVoices,300);
+function fixPron(text) {
+  // TTS 발음 보정 — 잘못 읽히는 단어 수동 교정
+  return text
+    .replace(/고요/g, '고ː요')
+    .replace(/보요/g, '보ː요')
+    .replace(/교요/g, '교ː요');
+}
 function speak(text){
-  pulseWordBox(); speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR';
+  pulseWordBox(); speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(fixPron(text)); u.lang='ko-KR';
   const base=parseFloat(G('baseRate').value)||0.74; const idx=parseInt(G('vSel').value); if(voices[idx])u.voice=voices[idx];
   let rate=base; if(IS_SENT(stage))rate=Math.max(0.5,base*0.92); if(cfg.rRate)rate=Math.max(0.5,Math.min(1.0,rate+(Math.random()-.5)*0.03));
   u.rate=rate; u.pitch=0.88; u.volume=1.0; speechSynthesis.speak(u);
@@ -1604,7 +1673,7 @@ function renderChart(ss){
   if(chartInst){chartInst.destroy();chartInst=null;}
   const groups=groupSess(ss);if(!groups.length)return;
   const dates=[...new Set(groups.map(s=>s.date))].slice(-30);
-  const mi={right:{name:'우측',color:'#5b9cf6'},left:{name:'좌측',color:'#4ecca3'},both:{name:'양쪽',color:'#a78bfa'}};
+  const mi={right:{name:'우측',color:'#5b9cf6'},left:{name:'좌측',color:'#4ecca3'},both:{name:'양이',color:'#a78bfa'}};
   const datasets=Object.keys(mi).map(m=>({
     label:mi[m].name,
     data:dates.map(d=>{const arr=groups.filter(s=>s.date===d&&s.mode===m);if(!arr.length)return null;const t=arr.reduce((a,s)=>a+s.total,0),c=arr.reduce((a,s)=>a+s.correct,0);return t?Math.round(c/t*100):null;}),
@@ -1616,12 +1685,44 @@ function renderChart(ss){
 function renderHis(ss){
   const el=G('hisList');const groups=groupSess(ss);
   if(!groups.length){el.innerHTML='<div class="empty">📊 이 기간에 기록이 없어요</div>';return;}
-  const ml={right:'우측',left:'좌측',both:'양쪽'},mb={right:'b-r',left:'b-l',both:'b-b'};
-  el.innerHTML=groups.slice().reverse().slice(0,40).map(s=>'<div class="his-item"><span class="badge '+(mb[s.mode]||'b-r')+'">'+(ml[s.mode]||s.mode)+'</span><span class="badge b-s">'+(s.stageLabel||s.stage)+'</span><div class="his-meta">'+s.date+' · Lv'+(s.level||1)+'</div><div><div class="his-pct">'+s.pct+'%</div><div class="his-cnt">'+s.correct+'/'+s.total+'</div></div></div>').join('');
+  const ml={right:'우측',left:'좌측',both:'양이'},mb={right:'b-r',left:'b-l',both:'b-b'};
+  el.innerHTML=groups.slice().reverse().slice(0,40).map((s,i)=>'<div class="his-item"><span class="badge '+(mb[s.mode]||'b-r')+'">'+(ml[s.mode]||s.mode)+'</span><span class="badge b-s">'+(s.stageLabel||s.stage)+'</span><div class="his-meta">'+s.date+' · Lv'+(s.level||1)+'</div><div style="text-align:right"><div class="his-pct">'+s.pct+'%</div><div class="his-cnt">'+s.correct+'/'+s.total+'</div></div><button class="his-edit-btn" onclick="openEditRecModal(\''+s.date+'\',\''+s.mode+'\',\''+s.stage+'\')">✏️</button></div>').join('');
 }
+
+/* ════ 기록 수정 모달 ════ */
+let editRec = {date:'', mode:'', stage:'', newMode:''};
+function openEditRecModal(date, mode, stage){
+  editRec = {date, mode, stage, newMode: mode};
+  const ml={right:'우측',left:'좌측',both:'양이'};
+  G('editRecSub').textContent = date+' · '+(ml[mode]||mode)+' → 어느 귀로 변경할까요?';
+  ['right','left','both'].forEach(m=>{
+    const btn = G('editBtn'+m[0].toUpperCase()+m.slice(1));
+    btn.className='edit-ear-btn'+(m===mode?' sel-'+ m[0]:'');
+  });
+  G('editRecModal').classList.add('on');
+}
+function selEditEar(m){
+  editRec.newMode = m;
+  ['right','left','both'].forEach(k=>{
+    const btn=G('editBtn'+k[0].toUpperCase()+k.slice(1));
+    btn.className='edit-ear-btn'+(k===m?' sel-'+k[0]:'');
+  });
+}
+function applyEditRec(){
+  if(!editRec.newMode || editRec.newMode===editRec.mode){ closeEditRecModal(); return; }
+  sessions.forEach(s=>{
+    if(s.date===editRec.date && s.mode===editRec.mode && s.stage===editRec.stage){
+      s.mode=editRec.newMode;
+    }
+  });
+  nSet('S', sessions);
+  closeEditRecModal();
+  renderRecord();
+}
+function closeEditRecModal(){ G('editRecModal').classList.remove('on'); }
 function doCSV(){
   if(!sessions.length){alert('내보낼 기록이 없어요!');return;}
-  const ml={right:'우측',left:'좌측',both:'양쪽'};
+  const ml={right:'우측',left:'좌측',both:'양이'};
   const h='날짜,귀,레벨,단계,맞음,틀림,총,정답률(%)';
   const rows=sessions.map(s=>[s.date,ml[s.mode]||s.mode,s.level||1,s.stageLabel||s.stage,s.correct,s.wrong,s.total,s.pct].join(','));
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+[h,...rows].join('\n'));
@@ -1633,7 +1734,7 @@ function renderWL(){
   document.querySelectorAll('#wEarGrid .ear-btn').forEach(b=>{b.className='ear-btn'+(b.dataset.m===wt?(wt==='right'?' on-r':wt==='left'?' on-l':' on-b'):'');});
   const lv=LEVELS[currentLevel-1];
   G('wStageRow').innerHTML=lv.stages.map(k=>'<button class="s-pill'+(k===ws?' on':'')+'" onclick="setWS(\''+k+'\'">'+( STAGE_LABELS[k]||k)+'</button>').join('');
-  const ml={right:'우측',left:'좌측',both:'양쪽'};
+  const ml={right:'우측',left:'좌측',both:'양이'};
   G('wTitle').textContent=ml[wt]+' · '+(STAGE_LABELS[ws]||ws)+' 추가 단어';
   G('wArea').value=((userWords[wt]&&userWords[wt][ws])||[]).map(w=>String(w).replace(/\|/g,'/')).join('\n');
 }
