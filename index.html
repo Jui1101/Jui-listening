@@ -1370,7 +1370,7 @@ function setStage(s) {
 /* ════ 단어 로드 ════ */
 function loadWord() {
   resetVsChips(true); curWord=''; curPair=null; scored=false;
-  const m = G('wMain'); m.textContent='—'; m.classList.remove('show');
+  const m = G('wMain'); m.style.transition='none'; m.classList.remove('show'); m.textContent='—'; void m.offsetWidth; setTimeout(()=>{m.style.transition='';},40);
   G('vsRow').style.display='none';
   G('wBoxHint').textContent='단어를 재생해보세요';
   G('wTap').classList.remove('hide');
@@ -1408,7 +1408,7 @@ function nextWord() {
   resetVsChips(true);
   const p = pickWord(); if(!p){alert('단어가 없어요!');return;}
   curWord=p.word; curPair=p.pair; scored=false;
-  const m=G('wMain'); m.classList.remove('show'); m.textContent='—'; void m.offsetWidth; m.textContent=curWord;
+  const m=G('wMain'); m.style.transition='none'; m.classList.remove('show'); m.textContent=curWord; void m.offsetWidth; setTimeout(()=>{m.style.transition='';},40);
   G('wTap').classList.remove('hide');
   G('typeInp').value=''; G('typeRes').textContent=''; G('typeRes').className='type-res';
   G('spRes').textContent='버튼 누르고 따라 말해봐'; G('spRes').className='sp-res';
@@ -1449,7 +1449,7 @@ function revealAns(){if(!curWord)return;const m=G('wMain');const s=m.classList.c
 function playCurrent(){if(!curWord)return;requestAnimationFrame(()=>setTimeout(()=>speak(curWord),80));}
 function typeCheck(){
   const v=G('typeInp').value.trim(); if(!v||!curWord)return;
-  const ok=norm(v)===norm(curWord);
+  const ok=isCorrect(v, curWord);
   const el=G('typeRes'); el.textContent='"'+v+'" → '+(ok?'✓ 맞아요!':'✗ 틀려요 (정답: '+curWord+')'); el.className='type-res '+(ok?'ok':'ng');
   G('wMain').classList.add('show'); G('wTap').classList.add('hide');
   if(!scored){if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}total++;sTotal++;scored=true;updateScore();checkAdv();updateWeak();}
@@ -1541,12 +1541,13 @@ function testVoice(){
 
 /* 따라말하기/* 따라말하기 */
 function norm(s){return s.replace(/[\s.,!?~]/g,'');}
+function isCorrect(input, answer){return norm(input)===norm(answer);}
 function newRec(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR)return null;
   const r=new SR(); r.lang='ko-KR'; r.interimResults=false; r.maxAlternatives=5;
   r.onresult=e=>{
     const alts=Array.from(e.results[0]).map(a=>a.transcript.trim());
-    const heard=alts[0]; const ok=alts.some(h=>norm(h)===norm(curWord));
+    const heard=alts[0]; const ok=isCorrect(heard, curWord);
     G('spRes').textContent='"'+heard+'" → '+(ok?'✓ 맞아요!':'✗ 달라요'); G('spRes').className='sp-res '+(ok?'ok':'ng');
     G('wMain').classList.add('show'); G('wTap').classList.add('hide');
     if(!scored){if(ok){correct++;sCorrect++;}else{wrong++;wrongWords.push(curWord);}total++;sTotal++;scored=true;updateScore();checkAdv();updateWeak();}
