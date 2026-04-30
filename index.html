@@ -1151,7 +1151,8 @@ function goStep2() {
   // 기존 닉네임 클릭으로 선택된 경우는 이미 처리됨
   if(inp) obNickName = inp;
   if(!obNickName) { G('nickInput').focus(); return; }
-  renderLevelCards();
+  const recLv = PERIOD_TO_LEVEL[selectedPeriodIdx] || 1;
+  renderOnboardLevelCards(recLv);
   goStep(2);
 }
 
